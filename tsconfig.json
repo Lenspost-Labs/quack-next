@@ -17,6 +17,8 @@
         "name": "next"
       }
     ],
+
+    // WARNING : Please do not change the `@/* path` as it is required by all the component's exports
     "paths": {
       "@/*": ["./*"]
     }

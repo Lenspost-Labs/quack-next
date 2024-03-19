@@ -6,7 +6,7 @@ const LeftSidebarItem = ({
   propText,
   propNavigateTo,
 }: {
-  propIcon: JSX.Element;
+  propIcon: any;
   propText: string;
   propNavigateTo: string;
 }) => {

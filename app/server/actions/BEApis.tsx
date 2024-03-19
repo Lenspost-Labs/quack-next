@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import {
   quackGetRequest,
@@ -10,9 +10,9 @@ export async function apiLoginStep1({
   message,
   solana_address,
 }: {
-  signature: string;
+  signature: any;
   message: string;
-  solana_address: string;
+  solana_address: any;
 }) {
   const response = await quackPostRequest({
     path: "/auth",
@@ -23,7 +23,7 @@ export async function apiLoginStep1({
     },
   });
 
-  return response;
+  return response.json();
 }
 
 export async function apiLoginStep2() {

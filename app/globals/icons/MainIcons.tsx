@@ -193,3 +193,123 @@ export const QuackIconNotifications = ({
     </>
   );
 };
+
+export const QuackIconComment = ({
+  width,
+  height,
+  fill,
+  strokeColor,
+  strokeLinecap,
+  strokeLinejoin,
+  strokeWidth,
+}: any) => {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width || 18}
+        height={height || 18}
+        fill={fill || "none"}
+        viewBox="0 0 18 18"
+      >
+        <path
+          stroke={strokeColor || "#5B7083"}
+          stroke-linecap={strokeLinecap || "round"}
+          stroke-linejoin={strokeLinejoin || "round"}
+          stroke-width={strokeWidth || 1.5}
+          d="M1.88 6.81c0-1.596 0-2.394.311-3.004a2.85 2.85 0 0 1 1.246-1.245c.61-.311 1.407-.311 3.004-.311h5.13c1.595 0 2.393 0 3.003.31.536.274.972.71 1.245 1.246.31.61.31 1.408.31 3.004v3.42c0 .529 0 .793-.034 1.015a2.85 2.85 0 0 1-2.37 2.369c-.427.068-.861.001-1.29.041a1.425 1.425 0 0 0-.923.462c-.251.277-.459.602-.683.9-.618.826-.928 1.239-1.307 1.386-.332.13-.701.13-1.033 0-.38-.147-.69-.56-1.308-1.386-.224-.298-.431-.623-.682-.9a1.43 1.43 0 0 0-.924-.462c-.428-.04-.863.027-1.29-.041a2.85 2.85 0 0 1-2.37-2.369c-.034-.221-.034-.486-.034-1.015V6.81Z"
+        />
+      </svg>
+    </>
+  );
+};
+
+export const QuackIconRecast = ({
+  width,
+  height,
+  fill,
+  strokeColor,
+  strokeLinecap,
+  strokeLinejoin,
+  strokeWidth,
+}: any) => {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width || 18}
+        height={height || 18}
+        fill={fill || "none"}
+        viewBox="0 0 18 18"
+      >
+        <path
+          stroke={strokeColor || "#5B7083"}
+          stroke-linecap={strokeLinecap || "round"}
+          stroke-linejoin={strokeLinecap || "round"}
+          stroke-width={strokeWidth || 1.5}
+          d="M9.5 1.5a11.451 11.451 0 0 1 2.19 2.082c.04.05.06.11.06.17M9.5 6a11.451 11.451 0 0 0 2.19-2.082.267.267 0 0 0 .06-.167M9.5 12a11.45 11.45 0 0 0-2.19 2.082.267.267 0 0 0-.06.167M9.5 16.5a11.45 11.45 0 0 1-2.19-2.082.267.267 0 0 1-.06-.17m4.5-10.497L11 3.75H8c-1.396 0-2.094 0-2.659.184A3.75 3.75 0 0 0 2.934 6.34C2.75 6.906 2.75 7.604 2.75 9s0 2.094.184 2.659A3.75 3.75 0 0 0 4.25 13.5m3 .749.75.001h3c1.396 0 2.094 0 2.659-.184a3.75 3.75 0 0 0 2.408-2.407c.183-.565.183-1.263.183-2.659s0-2.094-.183-2.659A3.75 3.75 0 0 0 14.75 4.5"
+        />
+      </svg>
+    </>
+  );
+};
+
+export const QuackIconLike = ({
+  width,
+  height,
+  fill,
+  strokeColor,
+  strokeLinecap,
+  strokeLinejoin,
+  strokeWidth,
+}: any) => {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width || 18}
+        height={height || 18}
+        fill={fill || "none"}
+        viewBox="0 0 18 18"
+      >
+        <path
+          stroke={strokeColor || "#5B7083"}
+          stroke-linecap={strokeLinecap || "round"}
+          stroke-linejoin={strokeLinejoin || "round"}
+          stroke-width={strokeWidth || 1.5}
+          d="M9.5 16.41c.75 0 7.5-3.768 7.5-9.043 0-4.078-5.128-6.212-7.5-2.637C7.124 1.15 2 3.286 2 7.367c0 5.275 6.75 9.042 7.5 9.042Z"
+        />
+      </svg>
+    </>
+  );
+};
+
+export const QuackIconShare = ({
+  width,
+  height,
+  fill,
+  strokeColor,
+  strokeLinecap,
+  strokeLinejoin,
+  strokeWidth,
+}: any) => {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width || 18}
+        height={height || 18}
+        fill={fill || "none"}
+        viewBox="0 0 18 18"
+      >
+        <path
+          stroke={strokeColor || "#5B7083"}
+          stroke-linecap={strokeLinecap || "round"}
+          stroke-linejoin={strokeLinejoin || "round"}
+          stroke-width={strokeWidth || 1.5}
+          d="M14.25 8.41v1.2c0 1.68 0 2.52-.327 3.161a3 3 0 0 1-1.311 1.311c-.642.327-1.482.327-3.162.327h-3.9c-1.68 0-2.52 0-3.162-.327a3 3 0 0 1-1.311-1.31C.75 12.128.75 11.288.75 9.608v-1.2M4.5 3.801a15.246 15.246 0 0 1 2.557-2.73A.69.69 0 0 1 7.5.91m0 0a.69.69 0 0 1 .443.162 15.28 15.28 0 0 1 2.557 2.73M7.5.91v9.75"
+        />
+      </svg>
+    </>
+  );
+};

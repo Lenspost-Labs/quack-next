@@ -12,7 +12,7 @@ import {
   QuackLogo,
 } from "@/app/globals/icons/MainIcons";
 
-export default () => {
+const LeftSidebar = () => {
   const sidebarItems = [
     {
       propIcon: <QuackIconHome width={18} height={18} strokeColor={"#000"} />,
@@ -73,3 +73,5 @@ export default () => {
     </>
   );
 };
+
+export default LeftSidebar;

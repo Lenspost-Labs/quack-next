@@ -26,6 +26,10 @@ import { toast } from "sonner";
 const CustomLoginBtn = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [compMounted, setCompMounted] = useState(true);
+  const [modalMessage, setModalMessage] = useState(
+    "Farcaster requires a registration fee for account activation. Upon registration, you will be prompted to make a payment for your account"
+  );
+
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["1"]));
 
   const {
@@ -86,6 +90,8 @@ const CustomLoginBtn = () => {
 
           if (txSignature === null) {
             utilConsoleOnlyDev("Error in fnSignAndSendTx");
+
+            toast.dismiss();
             toast.error("Error in Processing the Transaction");
             return;
           }
@@ -94,6 +100,9 @@ const CustomLoginBtn = () => {
           toast.success("Transaction Successful");
 
           toast.loading("Verifying Transaction signature");
+          setModalMessage(
+            "Verifying Transaction and Creating your account on chain"
+          );
           const resApi3 = await apiLoginStep3({
             txSig: txSignature as string,
           });
@@ -105,14 +114,15 @@ const CustomLoginBtn = () => {
             toast.dismiss();
             toast.success("Transaction Successful");
 
-            if (resApi3?.status === true) {
-              utilConsoleOnlyDev("resApi3");
-              utilConsoleOnlyDev(resApi3);
+            utilConsoleOnlyDev("resApi3");
+            utilConsoleOnlyDev(resApi3);
 
+            if (resApi3?.status === true) {
               localStorage.setItem("localFid", resApi3?.fid);
 
               toast.dismiss();
               toast.success("Login Successful");
+              setSelectedKeys(new Set(["3"]));
             } else {
               toast.dismiss();
               toast.error("Error in Verifying Transaction signature");
@@ -135,6 +145,8 @@ const CustomLoginBtn = () => {
       // FID found
       if (resApi1?.fid === "") {
         utilConsoleOnlyDev("FID found");
+
+        localStorage.setItem("localFid", resApi1?.fid);
 
         toast.dismiss();
         toast.success("Welcome back to Quack");
@@ -301,9 +313,9 @@ const CustomLoginBtn = () => {
 
                       <div className="text-center">
                         <div className="text-xs text-slate-600">
-                          Farcaster requires a registration fee for account
-                          activation. Upon registration, you will be prompted to
-                          make a payment for your account.
+                          {modalMessage && (
+                            <div className="">{modalMessage}</div>
+                          )}
                         </div>
                       </div>
                     </div>

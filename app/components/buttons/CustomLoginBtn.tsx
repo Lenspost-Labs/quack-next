@@ -1,9 +1,9 @@
-// README : This file contains the CustomLoginBtn - That triggers the login flow along with solana wallet's functions
+// README : This file contains the CustomLoginBtn - That triggers the login flow along with solana wallet functions
 
 import { useEffect, useState } from "react";
 import { utilConsoleOnlyDev } from "@/app/utils/functions/utilConsoleOnlyDev";
 import useSolWallet from "@/app/hooks/useSolWallet";
-import { apiLoginStep1, apiLoginStep2 } from "@/app/server";
+import { apiLoginStep1, apiLoginStep2, apiLoginStep3 } from "@/app/server";
 import type { Selection } from "@nextui-org/react";
 import {
   Accordion,
@@ -31,6 +31,7 @@ const CustomLoginBtn = () => {
   const {
     fnTriggerSignature,
     fnCheckWalletConnection,
+    fnSignAndSendTx,
     fnTriggerConnectWallet,
     fnTriggerDisconnectWallet,
     solPublicKey,
@@ -61,26 +62,78 @@ const CustomLoginBtn = () => {
       localStorage.setItem("jwtToken", resApi1.jwt);
 
       // No FID found - New User
-      if (resApi1?.fid === null || resApi1?.fid === "") {
+      if (resApi1?.fid === "") {
         utilConsoleOnlyDev("New User");
 
         setSelectedKeys(new Set(["2"]));
 
         toast.dismiss();
-        toast.success("Welcome to Quack");
+        toast.success("Hey, New User. Welcome to Quack");
 
         const resApi2 = await apiLoginStep2();
 
         if (resApi2) {
+          utilConsoleOnlyDev(`apiLoginStep2`);
           utilConsoleOnlyDev(resApi2);
+          const tx = resApi2?.tx;
+
+          // Trigger the Payment Flow :
+          toast.loading("Waiting for transaction confirmation");
+
+          const txSignature = await fnSignAndSendTx(tx);
+          utilConsoleOnlyDev(`txSignature is`);
+          utilConsoleOnlyDev(txSignature as string);
+
+          if (txSignature === null) {
+            utilConsoleOnlyDev("Error in fnSignAndSendTx");
+            toast.error("Error in Processing the Transaction");
+            return;
+          }
+
+          toast.dismiss();
+          toast.success("Transaction Successful");
+
+          toast.loading("Verifying Transaction signature");
+          const resApi3 = await apiLoginStep3({
+            txSig: txSignature as string,
+          });
+
+          utilConsoleOnlyDev(`apiLoginStep3`);
+          utilConsoleOnlyDev(resApi3);
+
+          if (resApi3) {
+            toast.dismiss();
+            toast.success("Transaction Successful");
+
+            if (resApi3?.status === true) {
+              utilConsoleOnlyDev("resApi3");
+              utilConsoleOnlyDev(resApi3);
+
+              localStorage.setItem("localFid", resApi3?.fid);
+
+              toast.dismiss();
+              toast.success("Login Successful");
+            } else {
+              toast.dismiss();
+              toast.error("Error in Verifying Transaction signature");
+            }
+          } else {
+            toast.dismiss();
+            toast.error("Error in sending transaction signature to server");
+          }
+          return;
         } else {
           utilConsoleOnlyDev("Error in apiLoginStep2");
           utilConsoleOnlyDev(resApi2);
+
+          toast.dismiss();
+          toast.error("Error in getting transaction from the server");
+          return;
         }
       }
 
       // FID found
-      if (resApi1?.fid !== null || resApi1?.fid === "") {
+      if (resApi1?.fid === "") {
         utilConsoleOnlyDev("FID found");
 
         toast.dismiss();
@@ -113,7 +166,7 @@ const CustomLoginBtn = () => {
     if (solConnected && !compMounted) {
       fnTriggerLoginFlow();
     }
-  }, [solConnected]);
+  }, [solConnected, compMounted]);
 
   return (
     <>
@@ -243,7 +296,7 @@ const CustomLoginBtn = () => {
                     <div className="flex flex-col gap-4">
                       <div className="text-center">
                         <Spinner />
-                        <div className="text-sm">We're Logging you in</div>
+                        <div className="text-sm">Logging you in</div>
                       </div>
 
                       <div className="text-center">
@@ -259,8 +312,8 @@ const CustomLoginBtn = () => {
                   <AccordionItem key="3" title="Account Setup" subtitle="">
                     <div className="flex flex-col gap-4">
                       <div className="text-sm text-slate-600">
-                        We've created your account, you can now setup your
-                        profile and start Quacking
+                        Account setup successful, you can now setup your profile
+                        and start Quacking
                       </div>
 
                       <div className="flex flex-col gap-2">

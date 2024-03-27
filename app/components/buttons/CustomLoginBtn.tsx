@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { utilConsoleOnlyDev } from "@/app/utils/functions/utilConsoleOnlyDev";
 import useSolWallet from "@/app/hooks/useSolWallet";
 import { apiLoginStep1, apiLoginStep2 } from "@/app/server";
-
+import type { Selection } from "@nextui-org/react";
 import {
   Accordion,
   AccordionItem,
@@ -21,10 +21,12 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { QuackIconLogout } from "@/app/globals/icons/MainIcons";
+import { toast } from "sonner";
 
 const CustomLoginBtn = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [compMounted, setCompMounted] = useState(true);
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["1"]));
 
   const {
     fnTriggerSignature,
@@ -40,8 +42,14 @@ const CustomLoginBtn = () => {
     "Clicking Sign or Approve only means you have proved this wallet is owned by you. This request will not trigger any blockchain transaction or cost any gas fee.";
 
   const fnTriggerLoginFlow = async () => {
+    toast.loading("Waiting for Signature");
     fnCheckWalletConnection();
     const sigBase58 = await fnTriggerSignature(signatureMessage);
+
+    toast.dismiss();
+    toast.success("Signature Verified");
+
+    toast.loading("Checking account status");
     const resApi1 = await apiLoginStep1({
       message: signatureMessage,
       signature: `${sigBase58}`.toString(),
@@ -51,11 +59,15 @@ const CustomLoginBtn = () => {
     if (resApi1) {
       utilConsoleOnlyDev(resApi1);
       localStorage.setItem("jwtToken", resApi1.jwt);
-      // cookies().set("jwtToken", resApi1.jwt, { path: "/" });
 
       // No FID found - New User
       if (resApi1?.fid === null || resApi1?.fid === "") {
         utilConsoleOnlyDev("New User");
+
+        setSelectedKeys(new Set(["2"]));
+
+        toast.dismiss();
+        toast.success("Welcome to Quack");
 
         const resApi2 = await apiLoginStep2();
 
@@ -70,13 +82,17 @@ const CustomLoginBtn = () => {
       // FID found
       if (resApi1?.fid !== null || resApi1?.fid === "") {
         utilConsoleOnlyDev("FID found");
+
+        toast.dismiss();
+        toast.success("Welcome back to Quack");
+
+        onOpenChange();
+        return;
       }
     } else {
       utilConsoleOnlyDev("Error in apiLoginStep1");
       utilConsoleOnlyDev(resApi1);
     }
-
-    utilConsoleOnlyDev(resApi1);
   };
 
   const fnSelectAndLogin = async (walletName: any) => {
@@ -107,9 +123,14 @@ const CustomLoginBtn = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="pb-0">Login to Quack</ModalHeader>
+              <ModalHeader className="text-xl font-bold text-center text-gray-800">
+                Login to Quack
+              </ModalHeader>
               <ModalBody className="p-4 pt-0">
                 <Accordion
+                  variant="light"
+                  selectedKeys={selectedKeys}
+                  onSelectionChange={setSelectedKeys}
                   defaultExpandedKeys={["1"]}
                   motionProps={{
                     variants: {
@@ -152,61 +173,70 @@ const CustomLoginBtn = () => {
                     key="1"
                     aria-label="Accordion 1"
                     title="Select Wallet"
-                    subtitle="Please select your preferred Solana wallet to Login"
                   >
-                    <ul className="flex flex-col gap-2">
-                      {solWallets
-                        .filter((item) => item.readyState === "Installed")
-                        .map((wallet: any, index: number) => (
-                          <li key={index}>
-                            <div className="flex items-center justify-between w-full gap-2">
-                              <div
-                                onClick={() => {
-                                  fnSelectAndLogin(wallet?.adapter?.name);
-                                }}
-                                className="p-2 w-full rounded-md flex items-center align-middle justify-between gap-4 bg-gray-50 cursor-pointer hover:bg-slate-200"
-                              >
-                                <div className="flex gap-2 items-center align-middle">
-                                  <img
-                                    className="w-6 h-6"
-                                    src={wallet.adapter.icon}
-                                  />
-                                  <div className="text-lg">
-                                    {wallet.adapter.name}
+                    <div className="flex flex-col gap-4 pt-0">
+                      <div className="text-sm text-gray-600">
+                        Please select your preferred Solana wallet to Login
+                      </div>
+                      <ul className="flex flex-col gap-2">
+                        {solWallets
+                          .filter((item) => item.readyState === "Installed")
+                          .map((wallet: any, index: number) => (
+                            <li key={index}>
+                              <div className="flex items-center justify-between w-full gap-2">
+                                <div
+                                  onClick={() => {
+                                    fnSelectAndLogin(wallet?.adapter?.name);
+                                  }}
+                                  className="p-2 w-full rounded-md flex items-center align-middle justify-between gap-4 bg-gray-50 cursor-pointer hover:bg-slate-200"
+                                >
+                                  <div className="flex gap-2 items-center align-middle">
+                                    <img
+                                      className="w-6 h-6"
+                                      src={wallet.adapter.icon}
+                                    />
+                                    <div className="text-lg">
+                                      {wallet.adapter.name}
+                                    </div>
+                                  </div>
+
+                                  <div className="text-xs m-2">
+                                    {wallet.adapter.connected
+                                      ? "Connected - Click to Sign"
+                                      : "Click to connect"}
                                   </div>
                                 </div>
-
-                                <div className="text-xs m-2">
-                                  {wallet.adapter.connected
-                                    ? "Connected - Click to Sign"
-                                    : "Click to connect"}
-                                </div>
-                              </div>
-                              {solConnected && (
-                                <Tooltip content="Disconnect" placement="right">
-                                  <div
-                                    onClick={() => fnTriggerDisconnectWallet()}
-                                    className=" hover:bg-slate-200 rounded-full p-2 cursor-pointer"
+                                {solConnected && (
+                                  <Tooltip
+                                    content="Disconnect"
+                                    placement="right"
                                   >
-                                    {" "}
-                                    <QuackIconLogout width={22} height={22} />
-                                  </div>
-                                </Tooltip>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                    </ul>
+                                    <div
+                                      onClick={() =>
+                                        fnTriggerDisconnectWallet()
+                                      }
+                                      className=" hover:bg-slate-200 rounded-full p-2 cursor-pointer"
+                                    >
+                                      {" "}
+                                      <QuackIconLogout width={22} height={22} />
+                                    </div>
+                                  </Tooltip>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
 
-                    {solWallets.filter(
-                      (item) => item.readyState === "NotDetected"
-                    ) &&
-                      solWallets.length === 0 && (
-                        <div>
-                          No wallets detected, please install a solana wallet on
-                          your browser to start quacking.
-                        </div>
-                      )}
+                      {solWallets.filter(
+                        (item) => item.readyState === "NotDetected"
+                      ) &&
+                        solWallets.length === 0 && (
+                          <div>
+                            No wallets detected, please install a solana wallet
+                            on your browser to start quacking.
+                          </div>
+                        )}
+                    </div>
                   </AccordionItem>
 
                   <AccordionItem disabled key="2" title="Registration">

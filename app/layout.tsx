@@ -5,6 +5,7 @@ import { DesktopLayout } from "@/app/layouts";
 import { SolanaWalletProvider } from "@/app/providers";
 import localFont from "next/font/local";
 import NextUIProviderWrap from "./providers/NextUIProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,6 +54,7 @@ export default function RootLayout({
     <html lang="en" className="light">
       <body className={openRunde.className}>
         {/* Even though, we wrap it with use client - We can use server components within the children passed too */}
+        <Toaster richColors position="top-right" closeButton={true} />
         <NextUIProviderWrap>
           <SolanaWalletProvider>
             <DesktopLayout>{children}</DesktopLayout>

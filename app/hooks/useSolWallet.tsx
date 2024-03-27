@@ -1,3 +1,5 @@
+// README : This file creates the useSolWallet custom hook which is used to handle all the Solana wallet's functionality
+
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import base58 from "bs58";
 import { Buffer } from "buffer";

@@ -313,3 +313,33 @@ export const QuackIconShare = ({
     </>
   );
 };
+
+export const QuackIconLogout = ({
+  width,
+  height,
+  fill,
+  strokeColor,
+  strokeLinecap,
+  strokeLinejoin,
+  strokeWidth,
+}: any) => {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width || 18}
+        height={height || 18}
+        fill={fill || "none"}
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke={strokeColor || "#5B7083"}
+          stroke-linecap={strokeLinecap || "round"}
+          stroke-linejoin={strokeLinejoin || "round"}
+          stroke-width={strokeWidth || 1.5}
+          d="M3.81153 7.65918C2.82454 8.39942 1.93322 9.25817 1.15739 10.2156C1.05246 10.3451 1 10.5021 1 10.6592M3.81153 13.6592C2.82454 12.9189 1.93322 12.0602 1.15739 11.1028C1.05246 10.9733 1 10.8162 1 10.6592M1 10.6592H14M9 3.18697C10.0615 2.23689 11.4633 1.65918 13 1.65918C16.3137 1.65918 19 4.34547 19 7.65918V13.6592C19 16.9729 16.3137 19.6592 13 19.6592C11.4633 19.6592 10.0615 19.0815 9 18.1314"
+        />
+      </svg>
+    </>
+  );
+};

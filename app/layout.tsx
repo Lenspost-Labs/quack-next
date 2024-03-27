@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { DesktopLayout } from "@/app/layouts";
-import { SolanaWalletProvider, ReactQueryProvider } from "@/app/providers";
+import { SolanaWalletProvider } from "@/app/providers";
 import localFont from "next/font/local";
+import NextUIProviderWrap from "./providers/NextUIProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,14 +50,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="light">
       <body className={openRunde.className}>
         {/* Even though, we wrap it with use client - We can use server components within the children passed too */}
-        <SolanaWalletProvider>
-          <ReactQueryProvider>
+        <NextUIProviderWrap>
+          <SolanaWalletProvider>
             <DesktopLayout>{children}</DesktopLayout>
-          </ReactQueryProvider>
-        </SolanaWalletProvider>
+          </SolanaWalletProvider>
+        </NextUIProviderWrap>
       </body>
     </html>
   );

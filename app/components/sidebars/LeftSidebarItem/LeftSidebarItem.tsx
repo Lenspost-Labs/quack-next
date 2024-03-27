@@ -16,13 +16,21 @@ const LeftSidebarItem = ({
     <>
       <Link href={propNavigateTo}>
         <div
-          className={`  ${
-            pathname === propNavigateTo ? "bg-[#f7efe2]" : ""
-          } flex flex-row justify-start text-center align-middle items-center gap-4 p-4 cursor-pointer hover:bg-[#f7efe2] rounded-md`}
+          className={`  flex flex-row justify-start text-center align-middle items-center gap-4 p-4 cursor-pointer hover:bg-[#f7efe2] rounded-md`}
         >
-          <div className="w-4 h-4">{propIcon}</div>
+          <div
+            className={` ${
+              pathname === propNavigateTo ? "text-[#F2AE40]" : ""
+            }w-4 h-4`}
+          >
+            {propIcon}
+          </div>
 
-          <div className="">{propText}</div>
+          <div
+            className={`${pathname === propNavigateTo ? "text-[#F2AE40]" : ""}`}
+          >
+            {propText}
+          </div>
         </div>
       </Link>
     </>

@@ -1,4 +1,3 @@
-
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import base58 from "bs58";
 import { Buffer } from "buffer";
@@ -6,13 +5,40 @@ import { Transaction, VersionedTransaction } from "@solana/web3.js";
 import { utilConsoleOnlyDev } from "../utils/functions";
 
 const useSolWallet = () => {
-  const { connected, signMessage, sendTransaction } = useWallet();
+  const {
+    connected: solConnected,
+    signMessage,
+    sendTransaction,
+    publicKey: solPublicKey,
+    connect: solConnect,
+    disconnect: solDisconnect,
+    select: solSelect,
+    wallets: solWallets,
+  } = useWallet();
   const { connection } = useConnection();
 
   const fnCheckWalletConnection = () => {
-    if (!connected) {
+    if (!solConnected) {
       utilConsoleOnlyDev("Wallet not connected");
       return;
+    }
+  };
+
+  const fnTriggerConnectWallet = async () => {
+    try {
+      await solConnect();
+    } catch (error) {
+      utilConsoleOnlyDev(`Error in fnTriggerConnectWallet ${error}`);
+      return null;
+    }
+  };
+
+  const fnTriggerDisconnectWallet = async () => {
+    try {
+      await solDisconnect();
+    } catch (error) {
+      utilConsoleOnlyDev(`Error in fnTriggerDisconnectWallet ${error}`);
+      return null;
     }
   };
 
@@ -78,6 +104,12 @@ const useSolWallet = () => {
     fnTriggerSignature,
     fnGetRawTransaction,
     fnSignAndSendTx,
+    fnTriggerConnectWallet,
+    fnTriggerDisconnectWallet,
+    solPublicKey,
+    solSelect,
+    solConnected,
+    solWallets,
   };
 };
 

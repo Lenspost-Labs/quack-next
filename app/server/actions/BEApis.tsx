@@ -6,24 +6,24 @@ import {
 } from "@/app/server/actions/BEQuackActions";
 
 export async function apiLoginStep1({
-  signature,
   message,
+  signature,
   solana_address,
 }: {
-  signature: any;
   message: string;
+  signature: any;
   solana_address: any;
 }) {
   const response = await quackPostRequest({
     path: "/auth",
     data: {
-      signature,
       message,
+      signature,
       solana_address,
     },
   });
 
-  return response.json();
+  return response;
 }
 
 export async function apiLoginStep2() {
@@ -44,4 +44,3 @@ export async function apiLoginStep3({ txSig }: { txSig: string }) {
 
   return response;
 }
-

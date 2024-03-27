@@ -143,7 +143,7 @@ const CustomLoginBtn = () => {
       }
 
       // FID found
-      if (resApi1?.fid === "") {
+      if (resApi1?.fid !== "") {
         utilConsoleOnlyDev("FID found");
 
         localStorage.setItem("localFid", resApi1?.fid);

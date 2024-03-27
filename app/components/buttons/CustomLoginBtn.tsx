@@ -1,15 +1,24 @@
 // README : This file contains the CustomLoginBtn - That triggers the login flow along with solana wallet functions
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { utilConsoleOnlyDev } from "@/app/utils/functions/utilConsoleOnlyDev";
 import useSolWallet from "@/app/hooks/useSolWallet";
-import { apiLoginStep1, apiLoginStep2, apiLoginStep3 } from "@/app/server";
+import {
+  apiCheckUsernameAvailable,
+  apiGetSuggestedUsernames,
+  apiLoginStep1,
+  apiLoginStep2,
+  apiLoginStep3,
+} from "@/app/server";
 import type { Selection } from "@nextui-org/react";
 import {
   Accordion,
   AccordionItem,
-  Badge,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Modal,
   ModalBody,
@@ -20,8 +29,10 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import { QuackIconLogout } from "@/app/globals/icons/MainIcons";
+import { QuackIconCopy, QuackIconLogout } from "@/app/globals/icons/MainIcons";
 import { toast } from "sonner";
+import Image from "next/image";
+import { utilCopytoClip } from "@/app/utils/functions/utilCopytoClip";
 
 const CustomLoginBtn = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -30,7 +41,18 @@ const CustomLoginBtn = () => {
     "Farcaster requires a registration fee for account activation. Upon registration, you will be prompted to make a payment for your account"
   );
 
+  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["1"]));
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const userNameRef = useRef(null);
+  const emailRef = useRef(null);
+
+  const [onboardValidation, setOnboardValidation] = useState({
+    username: false,
+    email: false,
+  });
+  const [showOnboardValidation, setShowOnboardValidation] =
+    useState<boolean>(false);
 
   const {
     fnTriggerSignature,
@@ -93,6 +115,9 @@ const CustomLoginBtn = () => {
 
             toast.dismiss();
             toast.error("Error in Processing the Transaction");
+            setModalMessage(
+              "Error in Processing the Transaction, Please try after sometime"
+            );
             return;
           }
 
@@ -122,7 +147,7 @@ const CustomLoginBtn = () => {
 
               toast.dismiss();
               toast.success("Login Successful");
-              setSelectedKeys(new Set(["3"]));
+              // setSelectedKeys(new Set(["3"]));
             } else {
               toast.dismiss();
               toast.error("Error in Verifying Transaction signature");
@@ -150,14 +175,70 @@ const CustomLoginBtn = () => {
 
         toast.dismiss();
         toast.success("Welcome back to Quack");
+        if (resApi1?.username != "") {
+          // setSelectedKeys(new Set(["3"]));
+          fnTriggerProfileSetupFlow();
+        }
 
-        onOpenChange();
+        setHasUserLoggedIn(true);
         return;
       }
     } else {
       utilConsoleOnlyDev("Error in apiLoginStep1");
       utilConsoleOnlyDev(resApi1);
     }
+
+    setHasUserLoggedIn(true);
+    onOpenChange();
+  };
+
+  let timeoutId: string | number | NodeJS.Timeout | undefined;
+  const fnCheckInputBoxIsTyping = () => {
+    // Clear the previous timeout (if any)
+    clearTimeout(timeoutId);
+    // Set a new timeout for 1 second
+    timeoutId = setTimeout(function () {
+      // Call your function after 1 seconds of no typing
+      handleUsernameValidation();
+    }, 1000);
+  };
+
+  const handleUsernameValidation = async () => {
+    setCheckingAvailability(true);
+    const userNameRefVal = (userNameRef?.current as never as HTMLInputElement)
+      ?.value;
+
+    utilConsoleOnlyDev("userNameRefVal");
+    utilConsoleOnlyDev(userNameRefVal || "");
+    const checkUsername = await apiCheckUsernameAvailable(userNameRefVal);
+
+    utilConsoleOnlyDev(checkUsername);
+    if (checkUsername?.available === true) {
+      setCheckingAvailability(false);
+      setShowOnboardValidation(true);
+      setOnboardValidation({
+        ...onboardValidation,
+        username: true,
+      });
+      return;
+    }
+
+    setOnboardValidation({
+      ...onboardValidation,
+      username: false,
+    });
+    setCheckingAvailability(false);
+  };
+
+  const fnContinueSetup = async () => {
+    utilConsoleOnlyDev("fnContinueSetup");
+    if (!onboardValidation.username) {
+      return;
+    }
+  };
+  const fnTriggerProfileSetupFlow = async () => {
+    setSelectedKeys(new Set(["3"]));
+    const resSuggestedUsernames = apiGetSuggestedUsernames();
   };
 
   const fnSelectAndLogin = async (walletName: any) => {
@@ -182,8 +263,72 @@ const CustomLoginBtn = () => {
 
   return (
     <>
-      <Button onPress={onOpen}>Login</Button>
+      {(!solConnected || !hasUserLoggedIn) && (
+        <>
+          <Button
+            onClick={onOpen}
+            variant="light"
+            fullWidth
+            className="bg-[#F2AE40]"
+          >
+            <div className="text-sm">Login</div>
+          </Button>
+        </>
+      )}
 
+      {hasUserLoggedIn && solConnected && (
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center">
+            <Image
+              src={"https://i.pravatar.cc/200/?img=6"}
+              width={40}
+              height={40}
+              alt="User"
+              className="cursor-pointer rounded-full"
+              onClick={onOpen}
+            />
+            <div className="flex flex-col">
+              <div className="text-sm">Display Name</div>
+              <div className="text-xs text-slate-600">@{`${"username"}`}</div>
+            </div>
+          </div>
+          <Dropdown backdrop="blur">
+            <DropdownTrigger>
+              <div className="cursor-pointer">...</div>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="User Options">
+              <DropdownItem key="address">
+                <div
+                  onClick={() => {
+                    utilCopytoClip(solPublicKey?.toBase58()?.toString() || "");
+                    toast.success("Copied to Clipboard");
+                  }}
+                  className="flex justify-between items-center gap-4"
+                >
+                  <div className="">
+                    {`${solPublicKey?.toBase58().toString()?.slice(0, 4)}` +
+                      "..." +
+                      `${solPublicKey?.toBase58().toString()?.slice(-4)}`}
+                  </div>
+                  <QuackIconCopy />
+                </div>
+              </DropdownItem>
+
+              <DropdownItem key="disconnect">
+                <div
+                  className="flex justify-between items-center gap-4"
+                  onClick={fnTriggerDisconnectWallet}
+                >
+                  <div className="">Disconnect</div>
+                  <div className="">
+                    <QuackIconLogout />
+                  </div>
+                </div>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      )}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -197,6 +342,7 @@ const CustomLoginBtn = () => {
                   selectedKeys={selectedKeys}
                   onSelectionChange={setSelectedKeys}
                   defaultExpandedKeys={["1"]}
+                  // disabledKeys={[`${!selectedKeys}`]}
                   motionProps={{
                     variants: {
                       enter: {
@@ -236,7 +382,7 @@ const CustomLoginBtn = () => {
                 >
                   <AccordionItem
                     key="1"
-                    aria-label="Accordion 1"
+                    aria-label="Select Wallet"
                     title="Select Wallet"
                   >
                     <div className="flex flex-col gap-4 pt-0">
@@ -304,7 +450,11 @@ const CustomLoginBtn = () => {
                     </div>
                   </AccordionItem>
 
-                  <AccordionItem disabled key="2" title="Registration">
+                  <AccordionItem
+                    key="2"
+                    aria-label="Registration"
+                    title="Registration"
+                  >
                     <div className="flex flex-col gap-4">
                       <div className="text-center">
                         <Spinner />
@@ -321,7 +471,11 @@ const CustomLoginBtn = () => {
                     </div>
                   </AccordionItem>
 
-                  <AccordionItem key="3" title="Account Setup" subtitle="">
+                  <AccordionItem
+                    key="3"
+                    title="Profile Setup"
+                    aria-label="Profile Setup"
+                  >
                     <div className="flex flex-col gap-4">
                       <div className="text-sm text-slate-600">
                         Account setup successful, you can now setup your profile
@@ -329,8 +483,53 @@ const CustomLoginBtn = () => {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <Input placeholder="Email" />
-                        <Input placeholder="Username" />
+                        <div className="">
+                          <Input required placeholder="Email" />
+                        </div>
+
+                        <div className="">
+                          <Input
+                            required
+                            onInput={fnCheckInputBoxIsTyping}
+                            ref={userNameRef}
+                            placeholder="Username"
+                          />
+                        </div>
+
+                        {checkingAvailability && (
+                          <div className="flex items-center mt-2 text-sm">
+                            {" "}
+                            <div className="">Checking availability</div>
+                            <Spinner
+                              color="default"
+                              className="ml-2"
+                              size="sm"
+                            />
+                          </div>
+                        )}
+                        {!checkingAvailability && showOnboardValidation && (
+                          <div className="mt-2 text-yellow-600">
+                            {" "}
+                            {onboardValidation.username === true ? (
+                              <div className="text-green-600 text-sm">
+                                {" "}
+                                Username is available
+                              </div>
+                            ) : (
+                              <div className="text-red-600 text-sm">
+                                Username is not available
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        <Button
+                          disabled={!onboardValidation.username}
+                          variant="light"
+                          className="bg-[#F2AE40]"
+                          onClick={fnContinueSetup}
+                        >
+                          <div className="text-sm">Continue</div>
+                        </Button>
                       </div>
                     </div>
                   </AccordionItem>

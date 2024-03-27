@@ -44,3 +44,20 @@ export async function apiLoginStep3({ txSig }: { txSig: string }) {
 
   return response;
 }
+
+// /user/suggested-username-pfp
+export async function apiGetSuggestedUsernames() {
+  const response = await quackGetRequest({
+    path: "/user/suggested-username-pfp",
+  });
+
+  return response;
+}
+
+export async function apiCheckUsernameAvailable(username: string) {
+  const response = await quackGetRequest({
+    path: `/helper/is-username-available?username=${username}`,
+  });
+
+  return response;
+}

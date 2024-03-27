@@ -5,6 +5,7 @@ import LeftSidebarItem from "@/app/components/sidebars/LeftSidebarItem/LeftSideb
 import { CustomLoginBtn } from "../buttons";
 import {
   QuackIconBookmark,
+  QuackIconBookmark18,
   QuackIconHome,
   QuackIconNotifications,
   QuackIconProfile,
@@ -56,7 +57,7 @@ const LeftSidebar = () => {
 
     {
       propIcon: (
-        <QuackIconBookmark
+        <QuackIconBookmark18
           width={18}
           height={18}
           strokeColor={`${pathname === "/bookmarks" ? "#F2AE40" : "#000"}`}
@@ -82,21 +83,23 @@ const LeftSidebar = () => {
 
   return (
     <>
-      <div className="flex flex-col p-4">
+      <div className="flex flex-col justify-between p-4 h-full">
         <div className="">
-          <QuackLogo />
-        </div>
-        <div className="flex flex-col w-full pt-4">
-          {sidebarItems.map((item, index) => {
-            return (
-              <LeftSidebarItem
-                key={index}
-                propIcon={item.propIcon}
-                propText={item.propText}
-                propNavigateTo={item.propNavigateTo}
-              />
-            );
-          })}
+          <div className="">
+            <QuackLogo />
+          </div>
+          <div className="flex flex-col w-full pt-4">
+            {sidebarItems.map((item, index) => {
+              return (
+                <LeftSidebarItem
+                  key={index}
+                  propIcon={item.propIcon}
+                  propText={item.propText}
+                  propNavigateTo={item.propNavigateTo}
+                />
+              );
+            })}
+          </div>
         </div>
         <div className="">
           <CustomLoginBtn />

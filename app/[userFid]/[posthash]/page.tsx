@@ -1,4 +1,5 @@
 // README: A page that fetches the post by postHash and userFid
+"use client";
 
 import PostDetailsCard from "@/app/components/cards/PostDetailsCard";
 
@@ -14,7 +15,7 @@ export default function PostPage({
 
   return (
     <>
-      <PostDetailsCard
+      {/* <PostDetailsCard
         postHash={postHash}
         postUserFid={userFid}
         key={postHash}
@@ -30,7 +31,8 @@ export default function PostPage({
         postReplies={"6.2K"}
         postComments={"1.2K"}
         postBookmarks={"1.2K"}
-      />
+      /> */}
+      {postHash} {userFid}
     </>
   );
 }

@@ -75,3 +75,17 @@ export async function apiGetOgs(data: string) {
   });
   return response;
 }
+
+export async function apiGetProfile(fid: string) {
+  const response = await quackGetRequest({
+    path: `/user/about?target_fid=${fid}`,
+  });
+  return response;
+}
+
+export async function apiGetUserPosts(fid: string) {
+  const response = await quackGetRequest({
+    path: `/user/post/for-fid?fid=${fid}`,
+  });
+  return response;
+}

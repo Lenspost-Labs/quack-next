@@ -10,6 +10,7 @@ import { utilConsoleOnlyDev } from "@/app/utils";
 import { utilExtractLinks } from "@/app/utils/functions/utilExtractLinks";
 import { utilXtimeAgo } from "@/app/utils/functions/utilXtimeAgo";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 const PostDetailsCard = ({
@@ -48,7 +49,7 @@ const PostDetailsCard = ({
 
   // Refs for Infinite scrolling :
   // https://www.freecodecamp.org/news/how-to-implement-infinite-scroll-in-next-js/
-  
+
   useEffect(() => {
     if (!postCardRef?.current) return;
 
@@ -65,22 +66,28 @@ const PostDetailsCard = ({
   return (
     <>
       <div
-        className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2"
+        className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2 py-4 hover:bg-[#f7efe2] cursor-pointer"
         ref={postCardRef}
       >
-        <div className="">
-          <Image
-            className={"rounded-full object-cover"}
-            src={postUserPfp}
-            width={48}
-            height={48}
-            alt=""
-          />
+        <div className=" max-w-[48px] max-h-[48px] object-cover">
+          <Link href={`/${postUserFid}`}>
+            <Image
+              className={"rounded-full object-cover max-h-[48px] max-w-[48px]"}
+              src={postUserPfp}
+              width={48}
+              height={48}
+              alt=""
+            />
+          </Link>
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex flex-row gap-2">
             <div className="">{postUserDisplayName}</div>
-            <div className="text-[#787878]">@{postUsername}</div>
+            <Link href={`/${postUserFid}`}>
+              <div className="text-[#787878] hover:underline">
+                @{postUsername}
+              </div>
+            </Link>
             <div className=" text-[#787878]">
               {" "}
               {utilXtimeAgo(postTimestamp)}

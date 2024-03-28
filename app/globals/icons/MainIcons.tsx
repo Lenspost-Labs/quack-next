@@ -177,10 +177,10 @@ export const QuackIconBookmark18 = ({
     <>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width={width || 30}
-        height={height || 30}
+        width={width || 18}
+        height={height || 18}
         fill={fill || "none"}
-        viewBox="0 0 30 30"
+        viewBox="0 0 24 24"
       >
         <path
           stroke={strokeColor || "#000"}
@@ -356,10 +356,10 @@ export const QuackIconLogout = ({
     <>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width={width || 18}
-        height={height || 18}
+        width={width || 30}
+        height={height || 30}
         fill={fill || "none"}
-        viewBox="0 0 18 18"
+        viewBox="0 0 30 30"
       >
         <path
           stroke={strokeColor || "#5B7083"}

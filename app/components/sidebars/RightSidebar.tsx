@@ -1,5 +1,13 @@
+import SearchAutoComp from "../cards/SearchAutoComp";
+
 const RightSidebar = () => {
-  return <div>RightSidebar</div>;
+  return (
+    <>
+      <div>
+        <SearchAutoComp />
+      </div>
+    </>
+  );
 };
 
 export default RightSidebar;

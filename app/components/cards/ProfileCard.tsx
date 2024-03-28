@@ -17,7 +17,7 @@ const ProfileCard = ({
           <div className="bg-yellow-200 rounded-full">
             <Image
               src={profilePfp}
-              className="rounded-full"
+              className="rounded-full max-w-[96px] max-h-[96px]"
               alt="profile"
               width={96}
               height={96}

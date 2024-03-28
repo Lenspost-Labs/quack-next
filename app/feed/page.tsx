@@ -26,6 +26,10 @@ export default function FeedPage() {
     fnGetFeed();
   }, [cursor]);
 
+  useEffect(() => {
+    fnGetFeed();
+  }, []);
+
   return (
     <>
       <div className="">

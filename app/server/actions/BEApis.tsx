@@ -89,3 +89,33 @@ export async function apiGetUserPosts(fid: string) {
   });
   return response;
 }
+
+export async function apiReactToPost({
+  fid,
+  hash,
+  reaction,
+  type,
+}: {
+  fid: number;
+  hash: string;
+  reaction: number;
+  type: number;
+}) {
+  const response = await quackPostRequest({
+    path: `/user/post/react`,
+    data: {
+      fid,
+      hash,
+      reaction,
+      type,
+    },
+  });
+  return response;
+}
+
+export async function apiGetSearchUsers(query: string) {
+  const response = await quackGetRequest({
+    path: `/helper/search-username?q=${query}`,
+  });
+  return response;
+}

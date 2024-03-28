@@ -148,6 +148,7 @@ const CustomLoginBtn = () => {
               toast.dismiss();
               toast.success("Login Successful");
               // setSelectedKeys(new Set(["3"]));
+              await fnTriggerProfileSetupFlow();
             } else {
               toast.dismiss();
               toast.error("Error in Verifying Transaction signature");
@@ -175,9 +176,9 @@ const CustomLoginBtn = () => {
 
         toast.dismiss();
         toast.success("Welcome back to Quack");
-        if (resApi1?.username != "") {
+        if (resApi1?.username !== "") {
           // setSelectedKeys(new Set(["3"]));
-          fnTriggerProfileSetupFlow();
+          await fnTriggerProfileSetupFlow();
         }
 
         setHasUserLoggedIn(true);

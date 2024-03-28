@@ -15,7 +15,7 @@ const DesktopLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       {/* Center - Dynamic */}
-      <div className="w-2/4 bg-yellow-200">{children}</div>
+      <div className="w-2/4 overflow-y-auto overflow-x-hidden bg-yellow-200 ">{children}</div>
 
       {/* Right Part */}
       <div className="w-1/4 bg-blue-200">

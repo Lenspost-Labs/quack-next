@@ -5,8 +5,12 @@ import {
   QuackIconRecast,
   QuackIconShare,
 } from "@/app/globals/icons/MainIcons";
+import { apiGetOgs } from "@/app/server";
+import { utilConsoleOnlyDev } from "@/app/utils";
+import { utilExtractLinks } from "@/app/utils/functions/utilExtractLinks";
 import { utilXtimeAgo } from "@/app/utils/functions/utilXtimeAgo";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 const PostDetailsCard = ({
   postUsername,
@@ -23,10 +27,47 @@ const PostDetailsCard = ({
   postReplies,
   postComments,
   postBookmarks,
+  newLimit,
+  isLast,
 }: TypePostDetailsCard) => {
+  const postCardRef = useRef<any>();
+
+  const fnFetchOgs = async () => {
+    const urls = utilExtractLinks(postText);
+    urls.map((url) => {
+      utilConsoleOnlyDev(url);
+    });
+
+    const response = await apiGetOgs(urls[0]);
+    utilConsoleOnlyDev(response);
+  };
+
+  useEffect(() => {
+    // fnFetchOgs();
+  }, [postText]);
+
+  // Refs for Infinite scrolling :
+  // https://www.freecodecamp.org/news/how-to-implement-infinite-scroll-in-next-js/
+  
+  useEffect(() => {
+    if (!postCardRef?.current) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (isLast && entry.isIntersecting) {
+        newLimit();
+        observer.unobserve(entry.target);
+      }
+    });
+
+    observer.observe(postCardRef.current);
+  }, [isLast]);
+
   return (
     <>
-      <div className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2">
+      <div
+        className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2"
+        ref={postCardRef}
+      >
         <div className="">
           <Image
             className={"rounded-full object-cover"}

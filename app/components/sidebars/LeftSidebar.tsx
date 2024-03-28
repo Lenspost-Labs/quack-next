@@ -28,7 +28,7 @@ const LeftSidebar = () => {
         />
       ),
       propText: "Feed",
-      propNavigateTo: "/",
+      propNavigateTo: "/feed",
     },
     {
       propIcon: (

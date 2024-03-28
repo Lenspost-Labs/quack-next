@@ -1,3 +1,4 @@
+"use client";
 // README : This file contains all the API trigger functions - eliminating Axios, using next fetch instead
 
 const BE_URL = "https://api.quack.fun";

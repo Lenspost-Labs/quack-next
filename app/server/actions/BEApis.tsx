@@ -61,3 +61,17 @@ export async function apiCheckUsernameAvailable(username: string) {
 
   return response;
 }
+
+export async function apiGetFeed(cursor: string) {
+  const response = await quackGetRequest({
+    path: `/user/post/feed?cursor=${cursor}`,
+  });
+  return response;
+}
+
+export async function apiGetOgs(data: string) {
+  const response = await quackGetRequest({
+    path: `/helper/fetch-og?url=${data}`,
+  });
+  return response;
+}

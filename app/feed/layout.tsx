@@ -5,9 +5,5 @@ export default function FeedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <DesktopLayout>{children}</DesktopLayout>
-    </>
-  );
+  return <>{children}</>;
 }

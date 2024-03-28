@@ -268,9 +268,8 @@ const CustomLoginBtn = () => {
         <>
           <Button
             onClick={onOpen}
-            variant="light"
-            fullWidth
-            className="bg-[#F2AE40]"
+            variant="shadow"
+            className="w-full bg-[#FFCD2C] text-white"
           >
             <div className="text-sm">Login</div>
           </Button>

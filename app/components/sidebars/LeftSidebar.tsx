@@ -13,6 +13,7 @@ import {
   QuackLogo,
 } from "@/app/globals/icons/MainIcons";
 import { usePathname } from "next/navigation";
+import { Button, Divider } from "@nextui-org/react";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
@@ -23,8 +24,8 @@ const LeftSidebar = () => {
         <QuackIconHome
           width={18}
           height={18}
-          strokeColor={`${pathname === "/" ? "#F2AE40" : "#000"}`}
-          fill={`${pathname === "/" ? "#F2AE40" : "none"}`}
+          strokeColor={`${pathname === "/feed" ? "#F2AE40" : "#000"}`}
+          fill={`${pathname === "/feed" ? "#F2AE40" : "none"}`}
         />
       ),
       propText: "Feed",
@@ -88,7 +89,8 @@ const LeftSidebar = () => {
           <div className="">
             <QuackLogo />
           </div>
-          <div className="flex flex-col w-full pt-4">
+          <Divider className="my-4" />
+          <div className="flex flex-col w-full pt-0">
             {sidebarItems.map((item, index) => {
               return (
                 <LeftSidebarItem
@@ -101,7 +103,15 @@ const LeftSidebar = () => {
             })}
           </div>
         </div>
+
         <div className="">
+          <Divider className="my-4" />
+          <Button variant="shadow" className="w-full bg-[#FFCD2C] text-white">
+            Quack Quack
+          </Button>
+
+          <Divider className="my-4" />
+
           <CustomLoginBtn />
         </div>
       </div>

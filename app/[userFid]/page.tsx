@@ -5,7 +5,8 @@ import { apiGetProfile, apiGetUserPosts } from "../server";
 import { utilConsoleOnlyDev } from "../utils";
 import ProfileCard from "../components/cards/ProfileCard";
 import PostDetailsCard from "../components/cards/PostDetailsCard";
-import { Spinner } from "@nextui-org/react";
+import { Input, Spinner } from "@nextui-org/react";
+import { QuackIconSearch } from "../globals/icons/MainIcons";
 
 export default function UserProfilePage({
   params,
@@ -36,12 +37,13 @@ export default function UserProfilePage({
   };
   useEffect(() => {
     fnGetProfile();
-    fnGetUserPosts();
+    // fnGetUserPosts();
   }, []);
 
   return (
     <>
-      {/* {profileData &&
+      <div className="flex flex-col gap-2">
+        {/* {profileData &&
         profileData?.map((item: any, index: any) => {
           return (
             <>
@@ -58,51 +60,65 @@ export default function UserProfilePage({
           );
         })} */}
 
-      {profileData && (
-        <>
-          <ProfileCard
-            profilePfp={profileData?.pfp}
-            profileFollowing={profileData?.following}
-            profileFollowers={profileData?.follower}
-            profileDisplayName={profileData?.name}
-            profileUsername={profileData?.username}
-            profileBio={profileData?.bio.text}
-          />
-        </>
-      )}
+        <Input
+          radius="sm"
+          type="text"
+          label=""
+          placeholder="Search Quack"
+          labelPlacement="outside"
+          startContent={
+            <QuackIconSearch width={18} height={18} strokeColor={"#000"} />
+          }
+        />
 
-      {userPosts &&
-        !loadingPosts &&
-        userPosts?.map((item: any, index: any) => {
-          return (
-            <>
-              <PostDetailsCard
-                key={index}
-                postUsername={profileData?.username}
-                postUserFid={profileData?.fid}
-                postUserDisplayName={profileData?.name}
-                postUserPfp={profileData?.pfp}
-                postText={item.body}
-                postImages={item.images}
-                postTimestamp={item.timestamp}
-                postLikes={item?.reaction?.LIKE}
-                postRecasts={item.reaction?.RECAST}
-                postHash={item.hash}
-                postShares={item.shares}
-                postReplies={item.replies}
-                postComments={item.comments}
-                postBookmarks={item.bookmarks}
-                // isLast={index === feedData.length - 1}
-                // newLimit={() => setCursor(apiResponse?.cursor)}
-              />
-            </>
-          );
-        })}
-      {loadingPosts && (
-        <p>
-          <Spinner color="default" />
-        </p>
-      )}
+        {profileData && (
+          <>
+            <ProfileCard
+              profilePfp={profileData?.pfp}
+              profileFollowing={profileData?.following}
+              profileFollowers={profileData?.follower}
+              profileDisplayName={profileData?.name}
+              profileUsername={profileData?.username}
+              profileBio={profileData?.bio.text}
+            />
+          </>
+        )}
+
+        <div className="bg-white rounded-md p-2">
+          {userPosts &&
+            !loadingPosts &&
+            userPosts?.map((item: any, index: any) => {
+              return (
+                <>
+                  <PostDetailsCard
+                    key={index}
+                    postUsername={profileData?.username}
+                    postUserFid={profileData?.fid}
+                    postUserDisplayName={profileData?.name}
+                    postUserPfp={profileData?.pfp}
+                    postText={item.body}
+                    postImages={item.images}
+                    postTimestamp={item.timestamp}
+                    postLikes={item?.reaction?.LIKE}
+                    postRecasts={item.reaction?.RECAST}
+                    postHash={item.hash}
+                    postShares={item.shares}
+                    postReplies={item.replies}
+                    postComments={item.comments}
+                    postBookmarks={item.bookmarks}
+                    // isLast={index === feedData.length - 1}
+                    // newLimit={() => setCursor(apiResponse?.cursor)}
+                  />
+                </>
+              );
+            })}
+        </div>
+        {loadingPosts && (
+          <p>
+            <Spinner color="default" />
+          </p>
+        )}
+      </div>
     </>
   );
 }

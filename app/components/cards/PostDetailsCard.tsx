@@ -66,7 +66,7 @@ const PostDetailsCard = ({
   return (
     <>
       <div
-        className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2 py-4 hover:bg-[#f7efe2] cursor-pointer"
+        className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2 py-4 hover:bg-[#fbf8f4] cursor-pointer"
         ref={postCardRef}
       >
         <div className=" max-w-[48px] max-h-[48px] object-cover">

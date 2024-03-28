@@ -1,8 +1,14 @@
 "use client";
 // README : This file contains all the API trigger functions - eliminating Axios, using next fetch instead
+import { useEffect } from "react";
 
 const BE_URL = "https://api.quack.fun";
-const jwtToken = localStorage.getItem("jwtToken");
+
+let jwtToken;
+if (typeof window !== "undefined") {
+  jwtToken = localStorage.getItem("jwtToken");
+}
+
 const headers = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${jwtToken}`,

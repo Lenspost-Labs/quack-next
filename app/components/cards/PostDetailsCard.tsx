@@ -40,6 +40,7 @@ const PostDetailsCard = ({
     frameImage: "",
     ogImage: "",
     ogTitle: "",
+    ogUrl: "",
     ogDescription: "",
     frameButton1: "",
     frameButton1Action: "post", // Default action is 'post'
@@ -78,6 +79,7 @@ const PostDetailsCard = ({
           "og:image": ogImage,
           "og:title": ogTitle,
           "og:description": ogDescription,
+          "og:url": ogUrl,
           "fc:frame": fcFrame,
           "fc:frame:image": frameImage,
           "fc:frame:image:aspect_ratio": frameImageAspectRatio,
@@ -101,6 +103,7 @@ const PostDetailsCard = ({
           ogImage,
           ogTitle,
           ogDescription,
+          ogUrl,
           frameImage,
           frameImageAspectRatio,
           fcFrame,
@@ -129,7 +132,12 @@ const PostDetailsCard = ({
 
   // OG Fetching & Frame Interactions
   useEffect(() => {
-    fetchDataAndSetMetadata();
+    if (!postFrameUrl) {
+      return;
+    }
+    if (postFrameUrl !== null) {
+      fetchDataAndSetMetadata();
+    }
   }, [postFrameUrl]);
 
   /**
@@ -148,14 +156,14 @@ const PostDetailsCard = ({
 
     try {
       if (btnAction === "post_redirect" || btnAction === "link") {
-        window.open(utilExtractLinks(postText)[0], "_blank");
+        window.open(postFrameUrl, "_blank");
         return;
       }
       const btnHitRes = await apiActOnAPost({
         hash: postHash,
         fid: Number(postUserFid),
         buttonIndex: index,
-        url: utilExtractLinks(postText)[0],
+        url: postFrameUrl,
       });
 
       console.log("btnHitRes", btnHitRes);
@@ -192,6 +200,7 @@ const PostDetailsCard = ({
         frameImage: metaTags["fc:frame:image"] || metaTags["og:image"] || "",
         ogImage: metaTags["og:image"] || "",
         ogTitle: metaTags["og:title"] || "",
+        ogUrl: metaTags["og:url"] || "",
         ogDescription: metaTags["og:description"] || "",
         frameButton1: metaTags["fc:frame:button:1"] || "",
         frameButton1Action: metaTags["fc:frame:button:1:action"] || "post",
@@ -230,55 +239,85 @@ const PostDetailsCard = ({
 
   return (
     <>
-      <Link href={`/${postUserFid}/${postHash}`}>
-        <div
-          className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2 py-4 hover:bg-[#fbf8f4] cursor-pointer"
-          ref={postCardRef}
-        >
-          <div className=" max-w-[48px] max-h-[48px] object-cover">
+      {/* <Link href={`/${postUserFid}/${postHash}`}> */}
+      <div
+        className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2 py-4 hover:bg-[#fafafa] cursor-pointer"
+        ref={postCardRef}
+      >
+        <div className=" max-w-[48px] max-h-[48px] object-cover">
+          <Link href={`/${postUserFid}`}>
+            <Image
+              className={"rounded-full object-cover max-h-[48px] max-w-[48px]"}
+              src={postUserPfp}
+              width={48}
+              height={48}
+              alt=""
+            />
+          </Link>
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-row gap-2">
+            <div className="">{postUserDisplayName}</div>
             <Link href={`/${postUserFid}`}>
-              <Image
-                className={
-                  "rounded-full object-cover max-h-[48px] max-w-[48px]"
-                }
-                src={postUserPfp}
-                width={48}
-                height={48}
-                alt=""
-              />
-            </Link>
-          </div>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-row gap-2">
-              <div className="">{postUserDisplayName}</div>
-              <Link href={`/${postUserFid}`}>
-                <div className="text-[#787878] hover:underline">
-                  @{postUsername}
-                </div>
-              </Link>
-              <div className=" text-[#787878]">
-                {" "}
-                {utilXtimeAgo(postTimestamp)}
+              <div className="text-[#787878] hover:underline">
+                @{postUsername}
               </div>
+            </Link>
+            <div className=" text-[#787878]">
+              {" "}
+              {utilXtimeAgo(postTimestamp)}
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <div className="">{postText}</div>
+
+            {postImages && !metadata.frameImage && (
+              <Image
+                width={240}
+                height={240}
+                src={postImages ? postImages[0] : ""}
+                alt={metadata.ogTitle}
+                className={`w-full p-2 rounded-md aspect-${
+                  metadata.frameImageAspectRatio || "1.91:1"
+                }
+                  `}
+              />
+            )}
+
+            {metadata?.ogImage &&
+              metadata.ogImage !== "" &&
+              !metadata.frameImage && (
+                <Image
+                  width={240}
+                  height={240}
+                  src={metadata?.ogImage ? metadata.ogImage : ""}
+                  alt={metadata.ogTitle}
+                  className={`w-full p-2 rounded-md aspect-${
+                    metadata.frameImageAspectRatio || "1.91:1"
+                  }
+                  `}
+                />
+              )}
+            <div className="text-xs text-slate-800 py-2 text-right">
+              {" "}
+              {metadata?.ogUrl}{" "}
             </div>
 
-            <div className="flex flex-col">
-              <div className="">{postText}</div>
-              <div className="">{postImages}</div>
+            {/* <div className="">{postImages}</div> */}
 
-              {/* Frames Container */}
+            {/* Frames Container */}
+            {metadata.frameImage && metadata.frameImage !== "" && (
               <div className="m-2 border rounded-md p-2">
-                {metadata.frameImage && (
-                  <Image
-                    width={metadata.frameImageWidth || 300}
-                    height={metadata.frameImageHeight || 300}
-                    src={metadata.frameImage}
-                    alt={metadata.ogTitle}
-                    className={`w-full p-2 rounded-md aspect-${
-                      metadata.frameImageAspectRatio || "1.91:1"
-                    }`}
-                  />
-                )}
+                <Image
+                  width={240}
+                  height={240}
+                  src={metadata.frameImage}
+                  alt={metadata.ogTitle}
+                  className={`w-full p-2 rounded-md aspect-${
+                    metadata.frameImageAspectRatio || "1.91:1"
+                  }`}
+                />
                 <h1 className="m-2 border px-2 p-1 text-sm w-fit rounded-md">
                   {metadata.ogTitle}
                 </h1>
@@ -288,12 +327,13 @@ const PostDetailsCard = ({
                   <input type="text" placeholder={metadata.frameInputText} />
                 )}
 
-                <div className="flex gap-2 p-2 w-full">
+                <div className="flex gap-2 p-2 w-full cursor-pointer">
                   {[1, 2, 3, 4].map((index) => {
                     const buttonData = metadata[`frameButton${index}`];
                     return (
                       buttonData && (
                         <Button
+                          variant="bordered"
                           endContent={
                             metadata[`frameButton${index}Action`] ===
                               "post_redirect" ||
@@ -317,55 +357,56 @@ const PostDetailsCard = ({
                   })}
                 </div>
               </div>
+            )}
+          </div>
+
+          <div className="flex flex-row justify-between align-middle items-center gap-4">
+            <div className="flex flex-row gap-2 items-center">
+              <div className="">
+                <QuackIconComment />
+              </div>
+              <div className="text-[#5B7083]">{postComments}</div>
             </div>
 
-            <div className="flex flex-row justify-between align-middle items-center gap-4">
-              <div className="flex flex-row gap-2 items-center">
-                <div className="">
-                  <QuackIconComment />
-                </div>
-                <div className="text-[#5B7083]">{postComments}</div>
+            <div
+              onClick={() => fnReactToPost("recast")}
+              className="flex flex-row gap-2 items-center"
+            >
+              <div className="">
+                <QuackIconRecast />
               </div>
+              <div className=" text-[#5B7083]">{postRecasts}</div>
+            </div>
 
-              <div
-                onClick={() => fnReactToPost("recast")}
-                className="flex flex-row gap-2 items-center"
-              >
-                <div className="">
-                  <QuackIconRecast />
-                </div>
-                <div className=" text-[#5B7083]">{postRecasts}</div>
+            <div className="flex flex-row gap-2 items-center">
+              <div className="">
+                <QuackIconLike />
               </div>
+              <div className=" text-[#5B7083]">{postLikes}</div>
+            </div>
 
-              <div className="flex flex-row gap-2 items-center">
-                <div className="">
-                  <QuackIconLike />
-                </div>
-                <div className=" text-[#5B7083]">{postLikes}</div>
+            <div className="flex flex-row gap-2 items-center">
+              <div className="">
+                <QuackIconShare />
               </div>
+              <div className=" text-[#5B7083]">{postShares}</div>
+            </div>
 
-              <div className="flex flex-row gap-2 items-center">
-                <div className="">
-                  <QuackIconShare />
-                </div>
-                <div className=" text-[#5B7083]">{postShares}</div>
+            <div className="flex flex-row gap-2 items-center">
+              <div className="">
+                <QuackIconBookmark
+                  width={18}
+                  height={18}
+                  strokeWidth={1.5}
+                  strokeColor={"#5B7083"}
+                />
               </div>
-
-              <div className="flex flex-row gap-2 items-center">
-                <div className="">
-                  <QuackIconBookmark
-                    width={18}
-                    height={18}
-                    strokeWidth={1.5}
-                    strokeColor={"#5B7083"}
-                  />
-                </div>
-                <div className=" text-[#5B7083]">{postBookmarks}</div>
-              </div>
+              <div className=" text-[#5B7083]">{postBookmarks}</div>
             </div>
           </div>
         </div>
-      </Link>
+      </div>
+      {/* </Link> */}
     </>
   );
 };

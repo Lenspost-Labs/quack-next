@@ -37,7 +37,7 @@ export default function UserProfilePage({
   };
   useEffect(() => {
     fnGetProfile();
-    // fnGetUserPosts();
+    fnGetUserPosts();
   }, []);
 
   return (
@@ -107,7 +107,7 @@ export default function UserProfilePage({
                     postReplies={item.replies}
                     postComments={item.comments}
                     postBookmarks={item.bookmarks}
-                    postFrameUrl={item.embeds[0].url}
+                    postFrameUrl={item.embeds[0] ? item.embeds[0].url : null}
                     // isLast={index === feedData.length - 1}
                     // newLimit={() => setCursor(apiResponse?.cursor)}
                   />

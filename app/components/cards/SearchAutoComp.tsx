@@ -11,6 +11,7 @@ import {
 import { utilConsoleOnlyDev } from "@/app/utils";
 import { apiGetSearchUsers } from "@/app/server";
 import Image from "next/image";
+import Link from "next/link";
 
 const SearchAutoComp = () => {
   const ipRef = useRef(null);
@@ -58,32 +59,38 @@ const SearchAutoComp = () => {
             <Spinner />
           </AutocompleteItem>
         )}
-        {usersData.map((user: any, index: any) => (
-          <AutocompleteItem key={index} textValue={user.username}>
-            {!searchLoading && (
-              <>
-                <div className="flex gap-2">
-                  <div className="flex items-center">
-                    <Image
-                      src={user.pfp}
-                      className="rounded-full"
-                      width={32}
-                      height={32}
-                      alt=""
-                    />{" "}
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="">{user.display_name}</div>
-                    <div className="text-sm text-slate-600">
-                      @{user.username}
+        {usersData &&
+          Array.isArray(usersData) &&
+          usersData.map((user: any, index: any) => (
+            <AutocompleteItem key={index} textValue={user.username}>
+              {!searchLoading && (
+                <>
+                  <Link href={`/${user.fid}`}>
+                    <div className="flex gap-2">
+                      <div className="flex items-center">
+                        <Image
+                          src={user.pfp}
+                          className="rounded-full"
+                          width={32}
+                          height={32}
+                          alt=""
+                        />{" "}
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="">{user.display_name}</div>
+                        <div className="text-sm text-slate-600">
+                          @{user.username}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </>
-            )}
-            {usersData.length == 0 && searchLoading && <Spinner />}
-          </AutocompleteItem>
-        ))}
+                  </Link>
+                </>
+              )}
+              {usersData && usersData.length == 0 && searchLoading && (
+                <Spinner />
+              )}
+            </AutocompleteItem>
+          ))}
       </Autocomplete>
     </div>
   );

@@ -13,6 +13,5 @@ interface TypePostDetailsCard {
   postReplies: string;
   postComments: string;
   postBookmarks: string;
-  postFrameUrl: string;
   [key: string]: any;
 }

@@ -22,7 +22,7 @@ export const utilXtimeAgo = (dateString: string) => {
   }
   interval = seconds / 60; // Calculate minutes
   if (interval > 1) {
-    return Math.floor(interval) + "m ago";
+    return Math.floor(interval) + "mins ago";
   }
   return Math.floor(seconds) + "s ago";
 };

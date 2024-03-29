@@ -107,6 +107,7 @@ export default function UserProfilePage({
                     postReplies={item.replies}
                     postComments={item.comments}
                     postBookmarks={item.bookmarks}
+                    postFrameUrl={item.embeds[0].url}
                     // isLast={index === feedData.length - 1}
                     // newLimit={() => setCursor(apiResponse?.cursor)}
                   />

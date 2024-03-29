@@ -33,6 +33,7 @@ import { QuackIconCopy, QuackIconLogout } from "@/app/globals/icons/MainIcons";
 import { toast } from "sonner";
 import Image from "next/image";
 import { utilCopytoClip } from "@/app/utils/functions/utilCopytoClip";
+import UserProfileChip from "../sidebars/LeftSidebarItem/UserProfileChip";
 
 const CustomLoginBtn = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -53,7 +54,6 @@ const CustomLoginBtn = () => {
   });
   const [showOnboardValidation, setShowOnboardValidation] =
     useState<boolean>(false);
-
   const {
     fnTriggerSignature,
     fnCheckWalletConnection,
@@ -276,59 +276,8 @@ const CustomLoginBtn = () => {
         </>
       )}
 
-      {hasUserLoggedIn && solConnected && (
-        <div className="flex justify-between items-center">
-          <div className="flex gap-2 items-center">
-            <Image
-              src={"https://i.pravatar.cc/200/?img=6"}
-              width={40}
-              height={40}
-              alt="User"
-              className="cursor-pointer rounded-full"
-              onClick={onOpen}
-            />
-            <div className="flex flex-col">
-              <div className="text-sm">Display Name</div>
-              <div className="text-xs text-slate-600">@{`${"username"}`}</div>
-            </div>
-          </div>
-          <Dropdown backdrop="blur">
-            <DropdownTrigger>
-              <div className="cursor-pointer">...</div>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="User Options">
-              <DropdownItem key="address">
-                <div
-                  onClick={() => {
-                    utilCopytoClip(solPublicKey?.toBase58()?.toString() || "");
-                    toast.success("Copied to Clipboard");
-                  }}
-                  className="flex justify-between items-center gap-4"
-                >
-                  <div className="">
-                    {`${solPublicKey?.toBase58().toString()?.slice(0, 4)}` +
-                      "..." +
-                      `${solPublicKey?.toBase58().toString()?.slice(-4)}`}
-                  </div>
-                  <QuackIconCopy />
-                </div>
-              </DropdownItem>
+      {hasUserLoggedIn && solConnected && <UserProfileChip />}
 
-              <DropdownItem key="disconnect">
-                <div
-                  className="flex justify-between items-center gap-4"
-                  onClick={fnTriggerDisconnectWallet}
-                >
-                  <div className="">Disconnect</div>
-                  <div className="">
-                    <QuackIconLogout />
-                  </div>
-                </div>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      )}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

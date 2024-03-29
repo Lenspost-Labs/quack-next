@@ -278,7 +278,7 @@ const PostDetailsCard = ({
                 height={240}
                 src={postImages ? postImages[0] : ""}
                 alt={metadata.ogTitle}
-                className={`w-full p-2 rounded-md aspect-${
+                className={`p-2 rounded-md aspect-${
                   metadata.frameImageAspectRatio || "1.91:1"
                 }
                   `}

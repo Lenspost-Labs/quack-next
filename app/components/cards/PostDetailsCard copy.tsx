@@ -35,6 +35,14 @@ const PostDetailsCard = ({
   postFrameUrl,
 }: TypePostDetailsCard) => {
   const postCardRef = useRef<any>();
+  const [ogData, setOgData] = useState({
+    ogImage: "",
+    ogTitle: "",
+    ogDescription: "",
+    frameImage: "",
+    frameButtons: [],
+  });
+
   const [metadata, setMetadata] = useState<any>({
     fcFrame: "",
     frameImage: "",
@@ -69,66 +77,67 @@ const PostDetailsCard = ({
 
     utilConsoleOnlyDev(response);
   };
-  const fetchDataAndSetMetadata = async () => {
-    try {
-      const response = await apiGetOgs(postFrameUrl);
-
-      if (response) {
-        const {
-          "og:image": ogImage,
-          "og:title": ogTitle,
-          "og:description": ogDescription,
-          "fc:frame": fcFrame,
-          "fc:frame:image": frameImage,
-          "fc:frame:image:aspect_ratio": frameImageAspectRatio,
-          "fc:frame:post_url": framePostUrl,
-          "fc:frame:button:1": frameButton1,
-          "fc:frame:button:2": frameButton2,
-          "fc:frame:button:3": frameButton3,
-          "fc:frame:button:4": frameButton4,
-          "fc:frame:button:1:action": frameButton1Action,
-          "fc:frame:button:1:target": frameButton1Target,
-          "fc:frame:button:2:action": frameButton2Action,
-          "fc:frame:button:2:target": frameButton2Target,
-          "fc:frame:button:3:action": frameButton3Action,
-          "fc:frame:button:3:target": frameButton3Target,
-          "fc:frame:button:4:action": frameButton4Action,
-          "fc:frame:button:4:target": frameButton4Target,
-          "fc:frame:state": frameState,
-        } = response;
-
-        setMetadata({
-          ogImage,
-          ogTitle,
-          ogDescription,
-          frameImage,
-          frameImageAspectRatio,
-          fcFrame,
-          frameButton1,
-          frameButton1Action,
-          frameButton1Target,
-          frameButton2, // Include missing properties
-          frameButton2Action,
-          frameButton2Target,
-          frameButton3,
-          frameButton3Action,
-          frameButton3Target,
-          frameButton4,
-          frameButton4Action,
-          frameButton4Target,
-          framePostUrl,
-          frameInputText: "",
-          frameState,
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching OG data:", error);
-      // Handle error appropriately
-    }
-  };
 
   // OG Fetching & Frame Interactions
   useEffect(() => {
+    const fetchDataAndSetMetadata = async () => {
+      try {
+        const response = await apiGetOgs(postFrameUrl);
+
+        if (response?.data) {
+          const {
+            "og:image": ogImage,
+            "og:title": ogTitle,
+            "og:description": ogDescription,
+            "fc:frame": fcFrame,
+            "fc:frame:image": frameImage,
+            "fc:frame:image:aspect_ratio": frameImageAspectRatio,
+            "fc:frame:post_url": framePostUrl,
+            "fc:frame:button:1": frameButton1,
+            "fc:frame:button:2": frameButton2,
+            "fc:frame:button:3": frameButton3,
+            "fc:frame:button:4": frameButton4,
+            "fc:frame:button:1:action": frameButton1Action,
+            "fc:frame:button:1:target": frameButton1Target,
+            "fc:frame:button:2:action": frameButton2Action,
+            "fc:frame:button:2:target": frameButton2Target,
+            "fc:frame:button:3:action": frameButton3Action,
+            "fc:frame:button:3:target": frameButton3Target,
+            "fc:frame:button:4:action": frameButton4Action,
+            "fc:frame:button:4:target": frameButton4Target,
+            "fc:frame:state": frameState,
+          } = response.data;
+
+          setMetadata({
+            ogImage,
+            ogTitle,
+            ogDescription,
+            frameImage,
+            frameImageAspectRatio,
+            fcFrame,
+            frameButton1,
+            frameButton1Action,
+            frameButton1Target,
+            frameButton2,
+            frameButton2Action,
+            frameButton2Target,
+            frameButton3,
+            frameButton3Action,
+            frameButton3Target,
+            frameButton4,
+            frameButton4Action,
+            frameButton4Target,
+            framePostUrl,
+            frameInputText: "",
+            frameState,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching OG data:", error);
+        // Handle error appropriately
+      }
+    };
+
     fetchDataAndSetMetadata();
   }, [postFrameUrl]);
 
@@ -183,7 +192,7 @@ const PostDetailsCard = ({
           return acc;
         },
         {}
-      ) as any;
+      ) as Record<string, string>;
 
       // Set metadata based on the extracted meta tags
       setMetadata({
@@ -199,15 +208,6 @@ const PostDetailsCard = ({
         frameButton2Action: "", // Add the missing property with an initial value
         frameButton2Target: "", // Add the missing property with an initial value
         frameButton3: "", // Add the missing property with an initial value
-        frameButton3Action: "", // Add the missing property with an initial value
-        frameButton3Target: "", // Add the missing property with an initial value
-        frameButton4: "", // Add the missing property with an initial value
-        frameButton4Action: "", // Add the missing property with an initial value
-        frameButton4Target: "", // Add the missing property with an initial value
-        framePostUrl: metaTags["fc:frame:post_url"] || "",
-        frameInputText: "",
-        frameImageAspectRatio: metaTags["fc:frame:image:aspect_ratio"] || "",
-        // frameState: metaTags["fc:frame:state"] || "",
         frameState: {}, //Empty for now - New update
         // Add the other missing properties here
       });
@@ -226,6 +226,96 @@ const PostDetailsCard = ({
       // Handle error appropriately
     }
   };
+
+  useEffect(() => {
+    // Clear existing meta tags in the head
+    document.head
+      .querySelectorAll('meta[name^="og:"], meta[name^="fc:"]')
+      .forEach((meta) => {
+        meta.remove();
+      });
+
+    // Create and append new meta tags
+    const metaTags = [
+      { name: "og:title", content: metadata.ogTitle },
+      { name: "og:description", content: metadata.ogDescription },
+      { name: "og:image", content: metadata.ogImage || metadata.frameImage },
+      { property: "fc:frame", content: metadata.fcFrame },
+      { property: "fc:frame:image", content: metadata.frameImage },
+      { property: "fc:frame:post_url", content: metadata.framePostUrl },
+      { property: "fc:frame:input:text", content: metadata.frameInputText },
+      {
+        property: "fc:frame:image:aspect_ratio",
+        content: metadata.frameImageAspectRatio || "1.91:1",
+      },
+      { property: "fc:frame:button:1", content: metadata.frameButton1 },
+      {
+        property: "fc:frame:button:1:action",
+        content: metadata.frameButton1Action,
+      },
+      {
+        property: "fc:frame:button:1:target",
+        content: metadata.frameButton1Target,
+      },
+      { property: "fc:frame:button:2", content: metadata.frameButton2 },
+      {
+        property: "fc:frame:button:2:action",
+        content: metadata.frameButton2Action,
+      },
+      {
+        property: "fc:frame:button:2:target",
+        content: metadata.frameButton2Target,
+      },
+      { property: "fc:frame:button:3", content: metadata.frameButton3 },
+      {
+        property: "fc:frame:button:3:action",
+        content: metadata.frameButton3Action,
+      },
+      {
+        property: "fc:frame:button:3:target",
+        content: metadata.frameButton3Target,
+      },
+      { property: "fc:frame:button:4", content: metadata.frameButton4 },
+      {
+        property: "fc:frame:button:4:action",
+        content: metadata.frameButton4Action,
+      },
+      {
+        property: "fc:frame:button:4:target",
+        content: metadata.frameButton4Target,
+      },
+      {
+        property: "fc:frame:state",
+        // content: JSON.stringify(metadata.frameState),
+        content: metadata.frameState,
+      },
+    ];
+
+    console.log("metaTags", metaTags);
+
+    metaTags.forEach((meta) => {
+      const metaTag = document.createElement("meta");
+      metaTag.name = meta.name || "";
+      metaTag.setAttribute("property", meta.property || ""); // Fix: Use setAttribute to set the 'property' attribute
+      metaTag.content = meta.content;
+      document.head.appendChild(metaTag);
+    });
+  }, [metadata]);
+
+  // Refs for Infinite scrolling :
+  // https://www.freecodecamp.org/news/how-to-implement-infinite-scroll-in-next-js/
+  useEffect(() => {
+    if (!postCardRef?.current) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (isLast && entry.isIntersecting) {
+        newLimit();
+        observer.unobserve(entry.target);
+      }
+    });
+
+    observer.observe(postCardRef.current);
+  }, [isLast]);
 
   return (
     <>
@@ -266,18 +356,15 @@ const PostDetailsCard = ({
               <div className="">{postImages}</div>
 
               {/* Frames Container */}
+
               <div className="m-2 border rounded-md p-2">
-                {metadata.frameImage && (
-                  <Image
-                    width={metadata.frameImageWidth || 300}
-                    height={metadata.frameImageHeight || 300}
-                    src={metadata.frameImage}
-                    alt={metadata.ogTitle}
-                    className={`w-full p-2 rounded-md aspect-${
-                      metadata.frameImageAspectRatio || "1.91:1"
-                    }`}
-                  />
-                )}
+                <Image
+                  src={metadata.ogImage || metadata.frameImage}
+                  alt={metadata.ogTitle}
+                  className={`w-full p-2 rounded-md aspect-${
+                    metadata.frameImageAspectRatio || "1.91:1"
+                  }`}
+                />
                 <h1 className="m-2 border px-2 p-1 text-sm w-fit rounded-md">
                   {metadata.ogTitle}
                 </h1>

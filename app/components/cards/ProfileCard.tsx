@@ -12,7 +12,7 @@ const ProfileCard = ({
 }: any) => {
   return (
     <>
-      <div className=" bg-white flex flex-col gap-4 p-4 rounded-md">
+      <div className="bg-green-300 flex flex-col gap-4 p-4 rounded-md">
         <div className="flex justify-between gap-4 items-center align-middle">
           <div className="bg-yellow-200 rounded-full">
             <Image

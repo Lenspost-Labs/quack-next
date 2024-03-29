@@ -119,3 +119,26 @@ export async function apiGetSearchUsers(query: string) {
   });
   return response;
 }
+
+export async function apiActOnAPost({
+  hash,
+  fid,
+  buttonIndex,
+  url,
+}: {
+  fid: number;
+  hash: string;
+  buttonIndex: number;
+  url: string;
+}) {
+  const response = await quackPostRequest({
+    path: `/user/post/act`,
+    data: {
+      hash,
+      fid,
+      buttonIndex,
+      url,
+    },
+  });
+  return response;
+}

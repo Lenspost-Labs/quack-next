@@ -79,7 +79,7 @@ export default function UserProfilePage({
               profileFollowers={profileData?.follower}
               profileDisplayName={profileData?.name}
               profileUsername={profileData?.username}
-              profileBio={profileData?.bio.text}
+              profileBio={profileData?.bio?.text}
             />
           </>
         )}
@@ -96,6 +96,7 @@ export default function UserProfilePage({
                     postUserFid={profileData?.fid}
                     postUserDisplayName={profileData?.name}
                     postUserPfp={profileData?.pfp}
+                    profileBio={profileData?.bio.text}
                     postText={item.body}
                     postImages={item.images}
                     postTimestamp={item.timestamp}

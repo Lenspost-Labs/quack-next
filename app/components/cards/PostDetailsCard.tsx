@@ -159,6 +159,7 @@ const PostDetailsCard = ({
       });
 
       console.log("btnHitRes", btnHitRes);
+      // Define an interface for the meta tags
 
       // Assuming btnHitRes is HTML response, parse it to extract meta tags
       const parser = new DOMParser();
@@ -169,7 +170,7 @@ const PostDetailsCard = ({
 
       // Extract meta tags from the parsed HTML
       const metaTags = Array.from(htmlDoc.querySelectorAll("meta")).reduce(
-        (acc, meta) => {
+        (acc: any, meta: any) => {
           const name = meta.getAttribute("name");
           const property = meta.getAttribute("property");
           const content = meta.getAttribute("content");

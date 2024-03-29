@@ -18,6 +18,8 @@ import { Button, Divider } from "@nextui-org/react";
 const LeftSidebar = () => {
   const pathname = usePathname();
 
+  const localStorageFID = localStorage.getItem("localFid");
+
   const sidebarItems = [
     {
       propIcon: (
@@ -73,12 +75,14 @@ const LeftSidebar = () => {
         <QuackIconProfile
           width={18}
           height={18}
-          strokeColor={`${pathname === "/profile" ? "#F2AE40" : "#000"}`}
-          fill={`${pathname === "/profile" ? "#F2AE40" : "none"}`}
+          strokeColor={`${
+            pathname === `/${localStorageFID}` ? "#F2AE40" : "#000"
+          }`}
+          fill={`${pathname === `/${localStorageFID}` ? "#F2AE40" : "none"}`}
         />
       ),
       propText: "Profile",
-      propNavigateTo: "/profile",
+      propNavigateTo: `/${localStorageFID}`,
     },
   ];
 

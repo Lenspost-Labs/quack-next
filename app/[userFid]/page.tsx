@@ -43,23 +43,6 @@ export default function UserProfilePage({
   return (
     <>
       <div className="flex flex-col gap-2">
-        {/* {profileData &&
-        profileData?.map((item: any, index: any) => {
-          return (
-            <>
-              <ProfileCard
-                profileisFollower={item?.followedBy}
-                profilePfp={item?.pfp}
-                profileFollowing={item?.following}
-                profileFollowers={item?.followers}
-                profileDisplayName={item?.name}
-                profileUsername={item?.username}
-                profileBio={item?.bio.text}
-              />
-            </>
-          );
-        })} */}
-
         <Input
           radius="sm"
           type="text"
@@ -74,12 +57,12 @@ export default function UserProfilePage({
         {profileData && (
           <>
             <ProfileCard
-              profilePfp={profileData?.pfp}
-              profileFollowing={profileData?.following}
-              profileFollowers={profileData?.follower}
-              profileDisplayName={profileData?.name}
-              profileUsername={profileData?.username}
-              profileBio={profileData?.bio?.text}
+              profilePfp={profileData?.pfp || ""}
+              profileFollowing={profileData?.following || 0}
+              profileFollowers={profileData?.follower || 0}
+              profileDisplayName={profileData?.name || ""}
+              profileUsername={profileData?.username || ""}
+              profileBio={profileData?.bio?.text || ""}
             />
           </>
         )}
@@ -92,12 +75,12 @@ export default function UserProfilePage({
                 <>
                   <PostDetailsCard
                     key={index}
-                    postUsername={profileData?.username}
+                    postUsername={profileData?.username || ""}
                     postUserFid={profileData?.fid}
-                    postUserDisplayName={profileData?.name}
-                    postUserPfp={profileData?.pfp}
-                    profileBio={profileData?.bio.text}
-                    postText={item.body}
+                    postUserDisplayName={profileData?.name || ""}
+                    postUserPfp={profileData?.pfp || ""}
+                    profileBio={profileData?.bio.text || ""}
+                    postText={item.body || ""}
                     postImages={item.images}
                     postTimestamp={item.timestamp}
                     postLikes={item?.reaction?.LIKE}

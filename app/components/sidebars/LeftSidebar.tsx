@@ -15,6 +15,7 @@ import {
 import { usePathname } from "next/navigation";
 import { Button, Divider } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import UserPostModal from "../modals/UserPostModal";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
@@ -129,9 +130,10 @@ const LeftSidebar = () => {
 
         <div className="">
           <Divider className="my-4" />
-          <Button variant="shadow" className="w-full bg-[#FFCD2C] text-white">
+          {/* <Button variant="shadow" className="w-full bg-[#FFCD2C] text-white">
             Quack Quack
-          </Button>
+          </Button> */}
+          <UserPostModal />
 
           <Divider className="my-4" />
 

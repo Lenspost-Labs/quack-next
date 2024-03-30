@@ -142,3 +142,11 @@ export async function apiActOnAPost({
   });
   return response;
 }
+
+export async function apiNewPost({ data }: { data: any }) {
+  const response = await quackPostRequest({
+    path: `/user/post`,
+    data,
+  });
+  return response;
+}

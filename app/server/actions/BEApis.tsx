@@ -150,3 +150,30 @@ export async function apiNewPost({ data }: { data: any }) {
   });
   return response;
 }
+
+export async function apiDoesUserFollow({ fid }: { fid: number }) {
+  const response = await quackGetRequest({
+    path: `/user/does-follow?target_fid=${fid}`,
+  });
+  return response;
+}
+
+export async function apiFollowUser({ fid }: { fid: number }) {
+  const response = await quackPostRequest({
+    path: `/user/follow?target_fid=${fid}`,
+    data: {
+      fid,
+    },
+  });
+  return response;
+}
+
+export async function apiUnfollowUser({ fid }: { fid: number }) {
+  const response = await quackPostRequest({
+    path: `/user/unfollow?target_fid=${fid}`,
+    data: {
+      fid,
+    },
+  });
+  return response;
+}

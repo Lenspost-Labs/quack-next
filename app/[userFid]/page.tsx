@@ -63,6 +63,7 @@ export default function UserProfilePage({
               profileDisplayName={profileData?.name || ""}
               profileUsername={profileData?.username || ""}
               profileBio={profileData?.bio?.text || ""}
+              profileFid={profileData?.fid}
             />
           </>
         )}

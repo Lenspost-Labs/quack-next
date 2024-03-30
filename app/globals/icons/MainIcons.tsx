@@ -180,7 +180,7 @@ export const QuackIconBookmark18 = ({
         width={width || 18}
         height={height || 18}
         fill={fill || "none"}
-        viewBox="0 0 24 24"
+        viewBox="0 0 30 30"
       >
         <path
           stroke={strokeColor || "#000"}

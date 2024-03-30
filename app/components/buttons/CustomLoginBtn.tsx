@@ -5,6 +5,7 @@ import { utilConsoleOnlyDev } from "@/app/utils/functions/utilConsoleOnlyDev";
 import useSolWallet from "@/app/hooks/useSolWallet";
 import {
   apiCheckUsernameAvailable,
+  apiGetProfile,
   apiGetSuggestedUsernames,
   apiLoginStep1,
   apiLoginStep2,
@@ -35,14 +36,15 @@ import Image from "next/image";
 import { utilCopytoClip } from "@/app/utils/functions/utilCopytoClip";
 import UserProfileChip from "../sidebars/LeftSidebarItem/UserProfileChip";
 
-const CustomLoginBtn = () => {
+const CustomLoginBtn = ({ hasLoggedIn }: { hasLoggedIn: boolean }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [compMounted, setCompMounted] = useState(true);
   const [modalMessage, setModalMessage] = useState(
     "Farcaster requires a registration fee for account activation. Upon registration, you will be prompted to make a payment for your account"
   );
 
-  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(false);
+  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(hasLoggedIn);
+  const [profileData, setProfileData] = useState<any>({});
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["1"]));
   const [checkingAvailability, setCheckingAvailability] = useState(false);
   const userNameRef = useRef(null);
@@ -256,11 +258,40 @@ const CustomLoginBtn = () => {
     }
   };
 
+  const fnFetchProfileDetails = async (fid: string) => {
+    if (window == undefined) return;
+
+    const resGetProfile = await apiGetProfile(
+      fid || localStorage.getItem("localFid") || ""
+    );
+    if (resGetProfile) {
+      utilConsoleOnlyDev("resGetProfile");
+      utilConsoleOnlyDev(resGetProfile);
+
+      setProfileData(resGetProfile);
+    } else {
+      setProfileData({
+        pfp: "https://picsum.photos/200",
+        username: "quackuser",
+        name: "quackuser",
+      });
+    }
+  };
+
   useEffect(() => {
     if (solConnected && !compMounted) {
       fnTriggerLoginFlow();
     }
   }, [solConnected, compMounted]);
+
+  useEffect(() => {
+    // Check local storage for user login status on component mount
+    const isLoggedIn = localStorage.getItem("jwtToken");
+    if (isLoggedIn) {
+      fnFetchProfileDetails(localStorage.getItem("localFid") || "");
+      setHasUserLoggedIn(true);
+    }
+  }, []);
 
   return (
     <>
@@ -276,7 +307,13 @@ const CustomLoginBtn = () => {
         </>
       )}
 
-      {hasUserLoggedIn && solConnected && <UserProfileChip />}
+      {hasUserLoggedIn && solConnected && (
+        <UserProfileChip
+          userPfp={profileData?.pfp || "https://picsum.photos/200"}
+          userUsername={profileData?.username || "quackuser"}
+          userDisplayName={profileData?.name || "quackuser"}
+        />
+      )}
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

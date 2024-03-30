@@ -14,7 +14,7 @@ const LeftSidebarItem = ({
 
   return (
     <>
-      <Link href={propNavigateTo}>
+      <Link href={propNavigateTo} className="cursor-pointer">
         <div
           className={`flex flex-row justify-start text-center align-middle items-center gap-4 p-4 cursor-pointer hover:bg-[#f7efe2] rounded-md`}
         >

@@ -14,9 +14,23 @@ import {
 } from "@/app/globals/icons/MainIcons";
 import { usePathname } from "next/navigation";
 import { Button, Divider } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
+  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(false);
+
+  const fnCheckLoggedIn = () => {
+    if (
+      localStorageFID === null ||
+      localStorageFID === undefined ||
+      localStorageFID === ""
+    ) {
+      setHasUserLoggedIn(false);
+    } else {
+      setHasUserLoggedIn(true);
+    }
+  };
 
   const localStorageFID = localStorage.getItem("localFid");
 
@@ -86,6 +100,10 @@ const LeftSidebar = () => {
     },
   ];
 
+  useEffect(() => {
+    fnCheckLoggedIn();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col justify-between p-4 h-full">
@@ -94,7 +112,7 @@ const LeftSidebar = () => {
             <QuackLogo />
           </div>
           <Divider className="my-4" />
-          <div className="flex flex-col w-full pt-0">
+          <div className="flex flex-col w-full">
             {sidebarItems.map((item, index) => {
               return (
                 <LeftSidebarItem
@@ -106,6 +124,7 @@ const LeftSidebar = () => {
               );
             })}
           </div>
+          <Divider className="my-4" />
         </div>
 
         <div className="">
@@ -116,7 +135,7 @@ const LeftSidebar = () => {
 
           <Divider className="my-4" />
 
-          <CustomLoginBtn />
+          <CustomLoginBtn hasLoggedIn={hasUserLoggedIn} />
         </div>
       </div>
     </>

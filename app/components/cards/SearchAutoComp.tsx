@@ -46,13 +46,13 @@ const SearchAutoComp = () => {
   }, []);
 
   return (
-    <div>
+    <div className="">
       {" "}
       <Autocomplete
         ref={ipRef}
         onInput={fnCheckInputBoxIsTyping}
         label="Search Users"
-        className="max-w-xs"
+        className="max-w-xs bg-white"
       >
         {searchLoading && usersData.length == 0 && (
           <AutocompleteItem textValue="Loading..." key={""}>

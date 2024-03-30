@@ -8,9 +8,9 @@ import { LeftSidebar, RightSidebar } from "@/app/components/sidebars";
 
 const DesktopLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex flex-row h-[100vh] gap-4 md:px-16 sm:px-8">
+    <div className="flex flex-row h-[100vh] md:justify-center gap-4 md:px-16 sm:p-0 sm:justify-between ">
       {/* Left Part */}
-      <div className="w-1/4">
+      <div className="md:max-w-[240px]">
         <LeftSidebar />
       </div>
 
@@ -20,7 +20,7 @@ const DesktopLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       {/* Right Part */}
-      <div className="w-1/4 ">
+      <div className="md:max-w-[240px]">
         <RightSidebar />
       </div>
     </div>

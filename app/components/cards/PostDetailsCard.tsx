@@ -277,7 +277,7 @@ const PostDetailsCard = ({
                 width={240}
                 height={240}
                 src={postImages ? postImages[0] : ""}
-                alt={metadata.ogTitle}
+                alt={metadata.ogTitle || "Frames on Quack"}
                 className={`p-2 rounded-md aspect-${
                   metadata.frameImageAspectRatio || "1.91:1"
                 }
@@ -291,8 +291,8 @@ const PostDetailsCard = ({
                 <Image
                   width={240}
                   height={240}
-                  src={metadata?.ogImage ? metadata.ogImage : ""}
-                  alt={metadata.ogTitle}
+                  src={metadata?.ogImage ? metadata.ogImage : "Quack Quack"}
+                  alt={metadata.ogTitle || "Frames on Quack"}
                   className={`w-full p-2 rounded-md aspect-${
                     metadata.frameImageAspectRatio || "1.91:1"
                   }
@@ -313,7 +313,7 @@ const PostDetailsCard = ({
                   width={240}
                   height={240}
                   src={metadata.frameImage}
-                  alt={metadata.ogTitle}
+                  alt={metadata.ogTitle || "Frames on Quack"}
                   className={`w-full p-2 rounded-md aspect-${
                     metadata.frameImageAspectRatio || "1.91:1"
                   }`}
@@ -333,6 +333,7 @@ const PostDetailsCard = ({
                     return (
                       buttonData && (
                         <Button
+                          key={index}
                           variant="bordered"
                           endContent={
                             metadata[`frameButton${index}Action`] ===

@@ -12,7 +12,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-const UserProfileChip = () => {
+const UserProfileChip = ({
+  userPfp,
+  userUsername,
+  userDisplayName,
+}: TypeUserProfileChip) => {
   const [hasUserLoggedIn, setHasUserLoggedIn] = useState(false);
   const { fnTriggerDisconnectWallet, solPublicKey } = useSolWallet();
 
@@ -25,7 +29,7 @@ const UserProfileChip = () => {
           } `}
         >
           <Image
-            src={"https://i.pravatar.cc/200/?img=6"}
+            src={userPfp}
             width={40}
             height={40}
             alt="User"
@@ -33,8 +37,8 @@ const UserProfileChip = () => {
           />
         </Link>
         <div className="flex flex-col">
-          <div className="text-sm">Display Name</div>
-          <div className="text-xs text-slate-600">@{`${"username"}`}</div>
+          <div className="text-sm">{userDisplayName}</div>
+          <div className="text-xs text-slate-600">@{userUsername}</div>
         </div>
       </div>
       <Dropdown backdrop="blur">

@@ -52,7 +52,7 @@ const SearchAutoComp = () => {
         ref={ipRef}
         onInput={fnCheckInputBoxIsTyping}
         label="Search Users"
-        className="max-w-md w-full border border-[#FCB11E] rounded-lg"
+        className="max-w-md w-full border border-[#FCB11E] rounded-xl"
         color="default"
       >
         {searchLoading && usersData.length == 0 && (

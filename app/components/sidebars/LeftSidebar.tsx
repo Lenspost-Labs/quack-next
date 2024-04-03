@@ -16,24 +16,12 @@ import { usePathname } from "next/navigation";
 import { Button, Divider } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import UserPostModal from "../modals/UserPostModal";
+import useAuth from "@/app/hooks/useAuth";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
-  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(false);
-
-  const fnCheckLoggedIn = () => {
-    if (
-      localStorageFID === null ||
-      localStorageFID === undefined ||
-      localStorageFID === ""
-    ) {
-      setHasUserLoggedIn(false);
-    } else {
-      setHasUserLoggedIn(true);
-    }
-  };
-
   const localStorageFID = localStorage.getItem("localFid");
+  const { isAuthenticated, checkAuthentication } = useAuth();
 
   const sidebarItems = [
     {
@@ -100,11 +88,6 @@ const LeftSidebar = () => {
       propNavigateTo: `/${localStorageFID}`,
     },
   ];
-
-  useEffect(() => {
-    fnCheckLoggedIn();
-  }, []);
-
   return (
     <>
       <div className="flex flex-col justify-between p-4 h-full">
@@ -137,7 +120,7 @@ const LeftSidebar = () => {
 
           <Divider className="my-4" />
 
-          <CustomLoginBtn hasLoggedIn={hasUserLoggedIn} />
+          <CustomLoginBtn />
         </div>
       </div>
     </>

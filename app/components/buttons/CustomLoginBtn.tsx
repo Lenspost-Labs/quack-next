@@ -36,14 +36,14 @@ import Image from "next/image";
 import { utilCopytoClip } from "@/app/utils/functions/utilCopytoClip";
 import UserProfileChip from "../sidebars/LeftSidebarItem/UserProfileChip";
 
-const CustomLoginBtn = ({ hasLoggedIn }: { hasLoggedIn: boolean }) => {
+const CustomLoginBtn = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [compMounted, setCompMounted] = useState(true);
   const [modalMessage, setModalMessage] = useState(
     "Farcaster requires a registration fee for account activation. Upon registration, you will be prompted to make a payment for your account"
   );
 
-  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(hasLoggedIn);
+  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(false);
   const [profileData, setProfileData] = useState<any>({});
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["1"]));
   const [checkingAvailability, setCheckingAvailability] = useState(false);

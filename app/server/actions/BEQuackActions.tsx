@@ -23,6 +23,11 @@ export async function quackGetRequest({ path }: { path: string }) {
     headers,
   });
   const res = await response.json();
+  if (res.message) {
+    if (res.message.toLowerCase() === "unauthorized") {
+      return null;
+    }
+  }
   return res;
 }
 
@@ -39,6 +44,11 @@ export async function quackPostRequest({
     headers,
   });
   const res = await response.json();
+  if (res.message) {
+    if (res.message.toLowerCase() === "unauthorized") {
+      return null;
+    }
+  }
   return res;
 }
 
@@ -55,6 +65,11 @@ export async function quackPutRequest({
     headers,
   });
   const res = await response.json();
+  if (res.message) {
+    if (res.message.toLowerCase() === "unauthorized") {
+      return null;
+    }
+  }
   return res;
 }
 
@@ -64,5 +79,10 @@ export async function quackDeleteRequest({ path }: { path: string }) {
     headers,
   });
   const res = await response.json();
+  if (res.message) {
+    if (res.message.toLowerCase() === "unauthorized") {
+      return null;
+    }
+  }
   return res;
 }

@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { apiGetProfile } from "../server";
 import { utilConsoleOnlyDev } from "../utils";
 import useSolWallet from "./useSolWallet";
+import useAuth from "./useAuth";
 
 const useUserProfile = () => {
   const localFid = localStorage.getItem("localFid");
   const { solPublicKey } = useSolWallet();
+  const isAuthenticated = useAuth();
 
   const [userProfile, setUserProfile] = useState({
     userPfp: "",
@@ -17,9 +19,9 @@ const useUserProfile = () => {
 
   useEffect(() => {
     let isMounted = true;
-
     const fetchProfile = async () => {
       try {
+        if (!isAuthenticated) return;
         const profileData = await apiGetProfile(localFid || "");
 
         utilConsoleOnlyDev("profileData in useUserProfile");

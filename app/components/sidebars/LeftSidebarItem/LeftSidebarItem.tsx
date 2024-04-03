@@ -1,3 +1,4 @@
+import useAuth from "@/app/hooks/useAuth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,10 +12,14 @@ const LeftSidebarItem = ({
   propNavigateTo: string;
 }) => {
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
-      <Link href={propNavigateTo} className="cursor-pointer">
+      <Link
+        href={isAuthenticated ? propNavigateTo : "/"}
+        className="cursor-pointer"
+      >
         <div
           className={`flex flex-row justify-start text-center align-middle items-center gap-4 p-4 cursor-pointer hover:bg-[#f7efe2] rounded-md`}
         >

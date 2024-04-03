@@ -172,7 +172,7 @@ const PostDetailsCard = ({
       // Assuming btnHitRes is HTML response, parse it to extract meta tags
       const parser = new DOMParser();
       const htmlDoc = parser.parseFromString(
-        btnHitRes?.data?.data,
+        btnHitRes?.data || "",
         "text/html"
       );
 
@@ -224,7 +224,7 @@ const PostDetailsCard = ({
 
       console.log("btnHitRes", btnHitRes);
       // message.destroy();
-      if (btnHitRes?.data?.message) {
+      if (btnHitRes?.message) {
         // message.success(btnHitRes?.data?.message);
       } else {
         // message.info("Frame Action Error");
@@ -239,7 +239,7 @@ const PostDetailsCard = ({
 
   return (
     <>
-      {/* <Link href={`/${postUserFid}/${postHash}`}> */}
+      <Link href={`/${postUserFid}/${postHash}`}>
       <div
         className="flex flex-row gap-4 bg-[#fff] border-b-2 p-2 py-4 hover:bg-[#fafafa] cursor-pointer"
         ref={postCardRef}
@@ -255,7 +255,7 @@ const PostDetailsCard = ({
             />
           </Link>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full px-2">
           <div className="flex flex-row gap-2">
             <div className="">{postUserDisplayName}</div>
             <Link href={`/${postUserFid}`}>
@@ -407,7 +407,7 @@ const PostDetailsCard = ({
           </div>
         </div>
       </div>
-      {/* </Link> */}
+      </Link>
     </>
   );
 };

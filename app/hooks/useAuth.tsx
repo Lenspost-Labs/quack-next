@@ -34,14 +34,14 @@ export default function useAuth() {
     setIsAuthenticated(isAuthenticated);
   }, []); // Empty dependency array to run the effect only once
 
-  useEffect(() => {
-    // Redirect based on authentication status
-    if (!isAuthenticated) {
-      router.push("/auth");
-    } else {
-      router.push("/feed");
-    }
-  }, [isAuthenticated, router]);
+  // useEffect(() => {
+  //   // Redirect based on authentication status
+  //   if (!isAuthenticated) {
+  //     router.push("/auth");
+  //   } else {
+  //     router.push("/feed");
+  //   }
+  // }, [isAuthenticated, router]);
 
   return {
     isAuthenticated,

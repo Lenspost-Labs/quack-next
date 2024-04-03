@@ -35,6 +35,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { utilCopytoClip } from "@/app/utils/functions/utilCopytoClip";
 import UserProfileChip from "../sidebars/LeftSidebarItem/UserProfileChip";
+import useAuth from "@/app/hooks/useAuth";
 
 const CustomLoginBtn = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -69,6 +70,8 @@ const CustomLoginBtn = () => {
   } = useSolWallet();
   const signatureMessage =
     "Clicking Sign or Approve only means you have proved this wallet is owned by you. This request will not trigger any blockchain transaction or cost any gas fee.";
+
+  const isAuthenticated = useAuth();
 
   const fnTriggerLoginFlow = async () => {
     toast.loading("Waiting for Signature");
@@ -178,11 +181,11 @@ const CustomLoginBtn = () => {
 
         toast.dismiss();
         toast.success("Welcome back to Quack");
-        if (resApi1?.username !== "") {
+        if (resApi1?.username == "") {
           // setSelectedKeys(new Set(["3"]));
           await fnTriggerProfileSetupFlow();
         }
-
+        onOpenChange();
         setHasUserLoggedIn(true);
         return;
       }
@@ -295,7 +298,8 @@ const CustomLoginBtn = () => {
 
   return (
     <>
-      {(!solConnected || !hasUserLoggedIn) && (
+      {/* {(!solConnected || !hasUserLoggedIn || !isAuthenticated) && ( */}
+      {(!isAuthenticated || !solConnected ) && (
         <>
           <Button
             onClick={onOpen}
@@ -306,8 +310,12 @@ const CustomLoginBtn = () => {
           </Button>
         </>
       )}
+      {/* )} */}
 
-      {hasUserLoggedIn && solConnected && <UserProfileChip />}
+      {/* {hasUserLoggedIn && solConnected && isAuthenticated && (
+        <UserProfileChip />
+      )} */}
+      {(isAuthenticated && solConnected ) && <UserProfileChip />}
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

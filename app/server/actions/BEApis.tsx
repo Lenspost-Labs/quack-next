@@ -177,3 +177,16 @@ export async function apiUnfollowUser({ fid }: { fid: number }) {
   });
   return response;
 }
+
+export async function apiGetPostDetails({
+  fid,
+  hash,
+}: {
+  fid: number;
+  hash: string;
+}) {
+  const response = await quackGetRequest({
+    path: `/user/post/cast?fid=${fid}&hash=${hash}`,
+  });
+  return response;
+}

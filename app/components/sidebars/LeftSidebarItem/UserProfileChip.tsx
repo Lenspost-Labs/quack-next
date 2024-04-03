@@ -1,5 +1,6 @@
 import { QuackIconCopy, QuackIconLogout } from "@/app/globals/icons/MainIcons";
 import useSolWallet from "@/app/hooks/useSolWallet";
+import useUserProfile from "@/app/hooks/useUserProfile";
 import { utilCopytoClip } from "@/app/utils/functions/utilCopytoClip";
 import {
   Dropdown,
@@ -12,13 +13,10 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-const UserProfileChip = ({
-  userPfp,
-  userUsername,
-  userDisplayName,
-}: TypeUserProfileChip) => {
-  const [hasUserLoggedIn, setHasUserLoggedIn] = useState(false);
+const UserProfileChip = ({}) => {
   const { fnTriggerDisconnectWallet, solPublicKey } = useSolWallet();
+  const userProfile = useUserProfile();
+  const { userPfp, userUsername, userDisplayName } = userProfile;
 
   return (
     <div className="flex justify-between items-center">

@@ -300,20 +300,14 @@ const CustomLoginBtn = ({ hasLoggedIn }: { hasLoggedIn: boolean }) => {
           <Button
             onClick={onOpen}
             variant="shadow"
-            className="w-full bg-[#FFCD2C] text-white"
+            className="w-full bg-[#FCB11E] text-white"
           >
             <div className="text-sm">Login</div>
           </Button>
         </>
       )}
 
-      {hasUserLoggedIn && solConnected && (
-        <UserProfileChip
-          userPfp={profileData?.pfp || "https://picsum.photos/200"}
-          userUsername={profileData?.username || "quackuser"}
-          userDisplayName={profileData?.name || "quackuser"}
-        />
-      )}
+      {hasUserLoggedIn && solConnected && <UserProfileChip />}
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

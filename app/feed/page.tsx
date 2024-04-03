@@ -17,7 +17,7 @@ export default function FeedPage() {
     // if (response) {
 
     setApiResponse(response);
-    setFeedData((prev: any) => [...prev, ...response?.feed]);
+    setFeedData((prev: any[]) => [...prev, ...(response?.feed || [])]);
 
     // }
   };
@@ -26,9 +26,9 @@ export default function FeedPage() {
     fnGetFeed();
   }, [cursor]);
 
-  useEffect(() => {
-    fnGetFeed();
-  }, []);
+  // useEffect(() => {
+  //   fnGetFeed();
+  // }, []);
 
   return (
     <>

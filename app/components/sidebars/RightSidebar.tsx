@@ -3,7 +3,7 @@ import SearchAutoComp from "../cards/SearchAutoComp";
 const RightSidebar = () => {
   return (
     <>
-      <div>
+      <div className="w-full p-4">
         <SearchAutoComp />
       </div>
     </>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -13,10 +13,13 @@ import Image from "next/image";
 import { apiNewPost } from "@/app/server";
 import { utilConsoleOnlyDev } from "@/app/utils";
 import { utilExtractLinks } from "@/app/utils/functions/utilExtractLinks";
+import useUserProfile from "@/app/hooks/useUserProfile";
 
 export default function UserPostModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [text, setText] = React.useState("");
+  const [text, setText] = useState("");
+  const userProfile = useUserProfile();
+  const { userPfp } = userProfile;
 
   const fnHandleNewPost = async () => {
     const resNewPost = await apiNewPost({
@@ -39,7 +42,7 @@ export default function UserPostModal() {
       <Button
         onPress={onOpen}
         variant="shadow"
-        className="w-full bg-[#FFCD2C] text-white"
+        className="w-full bg-[#FCB11E] text-white"
       >
         Quack Quack
       </Button>
@@ -60,7 +63,7 @@ export default function UserPostModal() {
                 <div className="flex gap-2 w-full py-4">
                   <div className="">
                     <Image
-                      src={"https://picsum.photos/200/300"}
+                      src={userPfp || "https://picsum.photos/200/300"}
                       width={40}
                       height={40}
                       alt="User"

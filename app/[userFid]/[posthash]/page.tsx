@@ -8,10 +8,10 @@ import PostDetailsCard from "@/app/components/cards/PostDetailsCard";
 export default function PostPage({
   params,
 }: {
-  params: { postHash: string; userFid: string };
+  params: { userFid: string; postHash: string };
 }) {
   console.log(params); // Check if params are received correctly
-  const { postHash, userFid } = params;
+  const { userFid, postHash } = params;
 
   return (
     <>
@@ -32,7 +32,7 @@ export default function PostPage({
         postComments={"1.2K"}
         postBookmarks={"1.2K"}
       /> */}
-      {postHash} {userFid}
+      {postHash} x {userFid}
     </>
   );
 }

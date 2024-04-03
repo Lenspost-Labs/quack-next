@@ -1,25 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useEffect } from "react";
+import useAuth from "./hooks/useAuth";
 
 export default function Home() {
-  const router = useRouter();
+  const isAuthenticated = useAuth();
 
   useEffect(() => {
-    const localFid = localStorage.getItem("localFid");
-    const localJwt = localStorage.getItem("jwtToken");
-
-    const fnCheckAuth = async () => {
-      if (localFid && localJwt) {
-        router.push("/feed");
-      } else {
-        router.push("/auth");
-      }
-    };
-
-    fnCheckAuth();
-  }, [router]);
+    isAuthenticated ? redirect("/feed") : redirect("/auth");
+  }, []);
 
   return <>Root Page</>;
 }

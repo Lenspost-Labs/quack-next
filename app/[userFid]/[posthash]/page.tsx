@@ -2,7 +2,7 @@
 "use client";
 
 import PostDetailsCard from "@/app/components/cards/PostDetailsCard";
-import { apiGetPostDetails } from "@/app/server";
+import { apiGetComments, apiGetPostDetails } from "@/app/server";
 import { utilConsoleOnlyDev } from "@/app/utils";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -36,11 +36,20 @@ export default function PostPage({
     setPostData(res);
   };
 
+  const fnGetCommentsForPost = async () => {
+    const res = await apiGetComments({
+      fid: Number(userFid),
+      hash: postHashFromPathname,
+    });
+    utilConsoleOnlyDev(res);
+  };
+
   useEffect(() => {
     utilConsoleOnlyDev(
       `userFid and postHash in PostPage: ${userFid} ${postHash}`
     );
     fnGetPostDetails();
+    fnGetCommentsForPost();
   }, [userFid, postHashFromPathname]);
 
   return (

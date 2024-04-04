@@ -17,10 +17,17 @@ const headers = {
 //GET Auto cached by Next13
 // https://nextjs.org/docs/app/api-reference/functions/fetch
 
-export async function quackGetRequest({ path }: { path: string }) {
+export async function quackGetRequest({
+  path,
+  data,
+}: {
+  path: string;
+  data?: Object;
+}) {
   const response = await fetch(BE_URL + path, {
     method: "GET",
     headers,
+    body: JSON.stringify(data),
   });
   const res = await response.json();
   if (res.message) {

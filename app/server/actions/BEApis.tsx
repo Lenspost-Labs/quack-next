@@ -190,3 +190,20 @@ export async function apiGetPostDetails({
   });
   return response;
 }
+
+export async function apiGetComments({
+  fid,
+  hash,
+}: {
+  fid: number;
+  hash: string;
+}) {
+  const response = await quackGetRequest({
+    path: `/user/post/child`,
+    data: {
+      fid,
+      hash,
+    },
+  });
+  return response;
+}

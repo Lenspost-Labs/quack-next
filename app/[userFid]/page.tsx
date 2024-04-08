@@ -7,6 +7,8 @@ import ProfileCard from "../components/cards/ProfileCard";
 import PostDetailsCard from "../components/cards/PostDetailsCard";
 import { Input, Spinner } from "@nextui-org/react";
 import { QuackIconSearch } from "../globals/icons/MainIcons";
+import { useQuery } from "@apollo/client";
+import { airGetCastsForFid } from "../server/airstack-apis/casts";
 
 export default function UserProfilePage({
   params,
@@ -21,6 +23,7 @@ export default function UserProfilePage({
 
   const fnGetProfile = async () => {
     const response = await apiGetProfile(userFid);
+
     utilConsoleOnlyDev(response);
 
     if (response) {
@@ -30,11 +33,13 @@ export default function UserProfilePage({
 
   const fnGetUserPosts = async () => {
     setLoadingPosts(true);
-    const response = await apiGetUserPosts(userFid);
-    utilConsoleOnlyDev(response);
-    setUserPosts(response);
+    const res = await airGetCastsForFid(parseInt(userFid, 10));
+    utilConsoleOnlyDev("res is ");
+    console.log(res);
+    setUserPosts(res);
     setLoadingPosts(false);
   };
+
   useEffect(() => {
     fnGetProfile();
     fnGetUserPosts();
